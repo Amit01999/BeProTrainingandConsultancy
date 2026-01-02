@@ -72,7 +72,7 @@ async function buildAll() {
     target: "node18",
     bundle: true,
     format: "cjs", // CommonJS for Vercel compatibility
-    outfile: "api/index.cjs",
+    outfile: "dist/api-handler.cjs",
     packages: "external", // Keep ALL node_modules external
     logLevel: "info",
     minify: false,
