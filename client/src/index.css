@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Learnify-inspired Palette - Soft, Playful, Modern */
+  --font-display: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Lavender background for soft, approachable feel */
+  /* Warm soft cream background */
+  --whitebackground: 255, 255, 255;
+  /* #FFFFFF - pure white */
+  --background: 254, 245, 237;
+  /* #FEF5ED */
+
+  --foreground: 24 20% 15%;
+  /* Dark warm-neutral text */
+
+  /* Dark text */
+
+  /* Coral/Orange-red Primary - energetic CTA color */
+  --primary: 11 100% 64%;
+  /* #FF6B4A - Coral orange */
+  --primary-foreground: 0 0% 100%;
+
+  /* Bright Yellow Secondary */
+  --secondary: 45 100% 60%;
+  /* #FFD333 - Bright yellow */
+  --secondary-foreground: 222 47% 11%;
+
+  /* Purple accent for badges and highlights */
+  --purple-accent: 258 85% 72%;
+  /* #9F7AEA - Soft purple */
+
+  --muted: 270 20% 90%;
+  /* Light lavender tint */
+  --muted-foreground: 215 16% 47%;
+
+  --accent: 258 60% 95%;
+  /* Very light purple */
+  --accent-foreground: 258 85% 40%;
+  /* Darker purple text */
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 270 20% 80%;
+  /* Subtle lavender border */
+  --input: 0 0% 100%;
+  /* White inputs */
+  --ring: 11 100% 64%;
+
+  --radius: 1rem;
+  /* 16px - softer, more rounded */
+
+  /* Card specific */
+  --card: 0 0% 100%;
+  /* White cards */
+  --card-foreground: 222 47% 11%;
+}
+
+.dark {
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
+
+  --primary: 39 100% 50%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 48 100% 50%;
+  --secondary-foreground: 222 47% 11%;
+
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+
+  --accent: 39 100% 15%;
+  --accent-foreground: 39 100% 60%;
+
+  --destructive: 0 62% 30%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 217 33% 17%;
+  --input: 217 33% 17%;
+  --ring: 39 100% 50%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    @apply font-bold tracking-tight text-foreground;
+  }
+}
+
+/* Custom Utilities */
+.glass-panel {
+  @apply bg-white/80 dark:bg-black/50 backdrop-blur-md border border-white/20 shadow-xl;
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-[#FF6B4A] to-[#FFD333];
+}
+
+.hero-pattern {
+  background-image: radial-gradient(rgba(159, 122, 234, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Learnify-style Cards */
+.learnify-card {
+  @apply bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border-none overflow-hidden;
+}
+
+.learnify-badge {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+/* Decorative shapes */
+.decorative-star {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: #FFD333;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* Illustration placeholders */
+.illustration-placeholder {
+  @apply relative overflow-hidden rounded-2xl flex items-center justify-center;
+  background: linear-gradient(135deg, #9F7AEA 0%, #C4B5FD 100%);
+}
+
+/* Custom Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+.animate-slide-up-delay {
+  animation: slideUp 0.6s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-delay {
+  animation: fadeIn 0.8s ease-out 0.3s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-delay-2 {
+  animation: fadeIn 0.8s ease-out 0.5s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-delay-3 {
+  animation: fadeIn 0.8s ease-out 0.7s forwards;
+  opacity: 0;
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Additional utility for scale on hover */
+.hover\:scale-102:hover {
+  transform: scale(1.02);
+}
+
+/* Line clamp utilities for text overflow */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Smooth transitions for all elements */
+* {
+  @apply transition-colors duration-200;
+}

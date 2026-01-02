@@ -1,0 +1,174 @@
+Build a Full MREN Stack Website for BePro Training and Consultancy
+🎯 Objective:
+Create a modern, responsive, and scalable web application using the MREN stack (MongoDB, React, Express, Node.js) for BePro Training and Consultancy, a Bangladesh-based training institute offering NSDA-approved government courses and private skill development programs.
+
+🏗️ Website content 
+🏛️ BePro Training & Consultancy
+
+Approved by NSDA, Government of Bangladesh
+“Empowering Youth Through Skill”
+Skill, Growth, Success – দক্ষতা উন্নয়ন ও সাফল্যে এক ঠিকানা
+
+🎯 Our Mission
+
+বাংলাদেশের যুবসমাজকে আন্তর্জাতিক মানের দক্ষতায় দক্ষ করে তোলা এবং দেশ–বিদেশে কর্মসংস্থানের সুযোগ সৃষ্টি করা।
+
+📚 NSDA Certified Courses (RPL & RTO)
+কোর্স	লেভেল	সময়কাল
+গ্রাফিক ডিজাইন	L-2	২৪ দিন
+গ্রাফিক ডিজাইন সফট ট্রেনিং	L-3	২৪ দিন
+ডিজিটাল মার্কেটিং সফট ট্রেনিং	L-3	২৪ দিন
+🎓 Other Professional Courses
+
+উদ্যোক্তা উন্নয়ন প্রশিক্ষণ
+
+কর্পোরেট ট্রেনিং (NGO, Internship, Corporate)
+
+Foreign Job Orientation – প্রবাসগামী কর্মীদের জন্য
+
+Language Training Program (English, German)
+
+Education & Higher Study Guidelines
+
+College / University Internship Program
+
+🌟 Opportunities & Benefits
+
+NSDA আন্তর্জাতিক মানের সার্টিফিকেট
+
+প্রশিক্ষণ শেষে দেশে ও বিদেশে চাকরির সুব্যবস্থা
+
+অভিজ্ঞ কর্পোরেট ট্রেইনার দ্বারা ক্লাস
+
+ভাতা: ১,০০০ – ৫,০০০ টাকা (সরকারি বাজেট প্রাপ্তি সাপেক্ষে)
+
+Job Placement Cell এর মাধ্যমে ক্যারিয়ার সাপোর্ট
+
+🚀 SKILLSBOOST PROGRAM
+🧠 Skill Progression
+
+Emotional Intelligence
+
+Leadership
+
+Critical Thinking
+
+Problem Solving
+
+Teamwork
+
+Public Speaking
+
+Communication Skill
+
+🤝 UCEP Bangladesh – Soft Skill Development Program
+✅ Training Includes
+
+Public Speaking & Presentation – আত্মবিশ্বাস ও প্রেজেন্টেশন স্কিল উন্নয়ন
+
+Interview Etiquette & Mock Interview – বাস্তব ইন্টারভিউ প্র্যাকটিস
+
+Leadership & Mindset Development – লিডারশিপ ও পজিটিভ অ্যাটিটিউড
+
+Communication & Emotional Intelligence – অফিসিয়াল কমিউনিকেশন দক্ষতা
+
+Creative Thinking & Problem Solving – ইনোভেটিভ চিন্তাভাবনা
+
+CV & Email Writing – প্রফেশনাল CV ও ইমেইল
+
+Workplace Etiquette – কর্পোরেট পরিবেশে আচরণবিধি
+
+🎯 Program Highlights
+
+Job Placement Cell
+
+UCEP Certificate
+
+CV, LinkedIn ও Job Portal Training
+
+Corporate Standard Hands-on Training
+
+2014–2015 সালে UCEP Khulna Region থেকে ৮৫০+ শিক্ষার্থী সফলভাবে কোর্স সম্পন্ন করেছে।
+
+🏢 Corporate Training
+
+ব্যাংক, হাসপাতাল, NGO ও প্রাইভেট সেক্টরের জন্য –
+
+Office Etiquette
+
+Communication & Emotional Intelligence
+
+Professional Workplace Skills
+
+🌍 Foreign Job Orientation
+
+বিদেশে চাকরির প্রস্তুতি
+
+CV Writing, Interview Skills
+
+Basic English Training
+
+বিদেশে চাকরির জন্য প্রয়োজনীয় গাইডলাইন
+
+🕒 Course Schedule & Fees
+বিষয়	তথ্য
+সময়কাল	৭ দিন
+ক্লাস টাইম	দুপুর ১:৩০ – প্রতিদিন ৪ ঘন্টা ৩০ মিনিট
+কোর্স ফি	২,০০০ টাকা
+German Language Course Fee	৫,০০০ টাকা
+স্থান	আগ্রহী হলে জানানো হবে
+📞 Contact Us
+
+Mobile: 01995-555588
+Email: ucepmostfskill@gmail.com
+
+Facebook: www.facebook.com/ucepkhulna
+
+Office Address:
+UCEP Khulna Region,
+৭ জয়নাল রোড, বয়রা, খুলনা
+
+🔔 ভয়কে জয় করো – দক্ষতা অর্জন করো – ক্যারিয়ার গড়ো BePro Training & Consultancy এর সাথে!
+🛠️ Technical Requirements
+Backend (Node.js + Express)
+RESTful API for courses, users, applications
+
+MongoDB models for:
+
+Course (type, level, duration, fee)
+
+User (role: admin/student, profile)
+
+Application (course ID, user ID, status)
+
+Frontend (React)
+Responsive UI with Tailwind or Bootstrap
+
+Dynamic routing (React Router)
+
+Course filtering by type, level, duration
+
+Bengali and English language toggle
+
+Admin Panel
+Add/edit/delete courses
+
+Manage applications
+
+View analytics (enrollments, feedback)
+
+Authentication
+JWT-based login/register
+
+Role-based access (admin vs student)
+
+📦 Bonus Features
+WhatsApp chat integration
+
+Certificate download (PDF)
+
+Testimonial carousel
+
+SEO optimization for Bangladesh training keywords
+Design the website UI with a light gradient and textured background. Use Stranded Orange as the primary color and Stranded Yellow as the secondary color. For overall style and layout inspiration, reference the UI of this website: https://pencilbox.edu.bd/.
+and Ensure the website is developed strictly using the MERN stack. The project must follow a clear separation of concerns, with the frontend and backend maintained in separate folders. Each folder should be independently deployable and uploaded to GitHub as separate repositories
