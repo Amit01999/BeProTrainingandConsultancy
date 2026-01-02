@@ -1,72 +1,80 @@
-import { Link } from "wouter";
-import { Facebook, Twitter, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import { Link } from 'wouter';
+import { Facebook, Twitter, Linkedin, ArrowRight } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="bg-foreground text-white mt-auto">
-      <div className="container mx-auto px-4 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
+    <footer className="bg-foreground text-white">
+      <div className="container mx-auto px-4 lg:px-12 py-24">
+        {/* Editorial Statement */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-end">
+          {/* Left — Brand Voice */}
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-white/40">
+              Education platform
+            </p>
 
-          {/* Brand */}
-          <div className="space-y-4">
-            <h3 className="text-2xl font-bold font-display text-white">
-              Learn<span className="text-primary">ify</span>
-            </h3>
-            <p className="text-sm text-white/60 leading-relaxed">
-              Empowering youth through skill development and professional training.
-              Unlock your potential with our industry-leading courses.
+            <h2 className="mt-4 text-4xl md:text-5xl font-bold leading-tight">
+              Stop learning
+              <span className="block text-primary">for certificates.</span>
+            </h2>
+
+            <p className="mt-6 max-w-md text-base text-white/60">
+              Learnify focuses on applied skills, real practice, and outcomes
+              that translate directly into jobs and careers.
             </p>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="font-bold text-white mb-4 font-display">Quick Links</h4>
-            <ul className="space-y-2.5 text-sm">
-              <li><Link href="/" className="text-white/70 hover:text-primary transition-colors">Home</Link></li>
-              <li><Link href="/courses" className="text-white/70 hover:text-primary transition-colors">All Courses</Link></li>
-              <li><Link href="/skills" className="text-white/70 hover:text-primary transition-colors">SkillsBoost</Link></li>
-              <li><Link href="/contact" className="text-white/70 hover:text-primary transition-colors">Contact Us</Link></li>
-            </ul>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h4 className="font-bold text-white mb-4 font-display">Contact Us</h4>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-3 text-white/70">
-                <MapPin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                <span>UCEP Khulna Region,<br/>7 Joynal Road, Boyra, Khulna</span>
-              </li>
-              <li className="flex items-center gap-3 text-white/70">
-                <Phone className="h-5 w-5 text-primary shrink-0" />
-                <span>+880 1234 567890</span>
-              </li>
-              <li className="flex items-center gap-3 text-white/70">
-                <Mail className="h-5 w-5 text-primary shrink-0" />
-                <span>info@beprotraining.com</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Socials */}
-          <div>
-            <h4 className="font-bold text-white mb-4 font-display">Follow Us</h4>
-            <div className="flex space-x-3">
-              <a href="#" className="p-3 rounded-xl bg-white/10 hover:bg-primary hover:scale-110 transition-all duration-200">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="p-3 rounded-xl bg-white/10 hover:bg-primary hover:scale-110 transition-all duration-200">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="p-3 rounded-xl bg-white/10 hover:bg-primary hover:scale-110 transition-all duration-200">
-                <Linkedin className="h-5 w-5" />
-              </a>
-            </div>
+          {/* Right — Primary Action */}
+          <div className="flex lg:justify-end">
+            <Link
+              href="/courses"
+              className="group inline-flex items-center gap-4 text-lg font-semibold"
+            >
+              Explore programs
+              <span className="h-12 w-12 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition">
+                <ArrowRight className="h-5 w-5" />
+              </span>
+            </Link>
           </div>
         </div>
 
-        <div className="border-t border-white/10 mt-12 pt-8 text-center text-sm text-white/50">
-          © {new Date().getFullYear()} BePro Training & Consultancy. All rights reserved.
+        {/* Micro Navigation */}
+        <div className="mt-20 flex flex-wrap items-center justify-between gap-8 text-sm text-white/50">
+          <div className="flex flex-wrap gap-x-8 gap-y-3">
+            <Link href="/" className="hover:text-white transition">
+              Home
+            </Link>
+            <Link href="/courses" className="hover:text-white transition">
+              Courses
+            </Link>
+            <Link href="/skills" className="hover:text-white transition">
+              SkillsBoost
+            </Link>
+            <Link href="/services" className="hover:text-white transition">
+              Services
+            </Link>
+            <Link href="/contact" className="hover:text-white transition">
+              Contact
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-4">
+            {[Facebook, Twitter, Linkedin].map((Icon, i) => (
+              <a
+                key={i}
+                href="#"
+                className="h-9 w-9 rounded-full border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary transition"
+              >
+                <Icon className="h-4 w-4" />
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Legal */}
+        <div className="mt-10 pt-6 border-t border-white/10 text-xs text-white/40 flex flex-col md:flex-row justify-between gap-4">
+          <span>© {new Date().getFullYear()} BePro Training & Consultancy</span>
+          <span>Built for outcomes, not applause</span>
         </div>
       </div>
     </footer>
