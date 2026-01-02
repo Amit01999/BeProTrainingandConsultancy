@@ -5,10 +5,10 @@
   "framework": null,
   "outputDirectory": "dist/public",
   "functions": {
-    "api/**/*.ts": {
+    "api/index.cjs": {
+      "runtime": "nodejs20.x",
       "memory": 1024,
-      "maxDuration": 10,
-      "includeFiles": "server/**"
+      "maxDuration": 10
     }
   }
 }
