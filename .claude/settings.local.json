@@ -11,7 +11,11 @@
       "Bash(npm run seed:*)",
       "Bash(cat:*)",
       "Bash(git init:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(git rm:*)"
     ]
   }
 }

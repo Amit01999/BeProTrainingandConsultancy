@@ -3,11 +3,5 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": null,
-  "outputDirectory": "dist/public",
-  "functions": {
-    "api/**/*.cjs": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  }
+  "outputDirectory": "dist/public"
 }

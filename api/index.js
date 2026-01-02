@@ -86,7 +86,7 @@ var init_db = __esm({
   }
 });
 
-// api/index.ts
+// src/api/index.ts
 var index_exports = {};
 __export(index_exports, {
   default: () => handler,
@@ -888,7 +888,7 @@ async function registerRoutes(httpServer, app2) {
   return httpServer;
 }
 
-// api/index.ts
+// src/api/index.ts
 var app = (0, import_express.default)();
 console.log("Environment check:", {
   hasMongoUrl: !!process.env.MONGO_URL,

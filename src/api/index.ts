@@ -1,5 +1,5 @@
 import express, { type Request, Response, NextFunction } from 'express';
-import { registerRoutes } from '../server/routes';
+import { registerRoutes } from '../../server/routes';
 
 const app = express();
 
@@ -69,7 +69,7 @@ let isInitialized = false;
 async function initializeApp() {
   if (isInitialized) return app;
 
-  const { connectMongo } = await import('../server/db');
+  const { connectMongo } = await import('../../server/db');
   await connectMongo();
   await registerRoutes(null as any, app);
 
