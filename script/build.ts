@@ -61,6 +61,36 @@ async function buildAll() {
     external: externals,
     logLevel: "info",
   });
+
+  console.log("building API serverless function...");
+
+  // Bundle API function with all server code for Vercel
+  await esbuild({
+    entryPoints: ["api/index.ts"],
+    platform: "node",
+    target: "node18",
+    bundle: true,
+    format: "esm",
+    outfile: "api/index.js",
+    external: [
+      "@google/generative-ai",
+      "axios",
+      "bcrypt",
+      "bufferutil",
+      "dotenv",
+      "nodemailer",
+      "openai",
+      "pg",
+      "stripe",
+      "utf-8-validate",
+    ],
+    logLevel: "info",
+    minify: false,
+    sourcemap: true,
+    banner: {
+      js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);"
+    }
+  });
 }
 
 buildAll().catch((err) => {
