@@ -1,9 +1,14 @@
-import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from 'express';
 import { registerRoutes } from '../server/routes';
-import { serveStatic } from '../server/static';
 
 const app = express();
+
+// Log environment check (for debugging)
+console.log('Environment check:', {
+  hasMongoUrl: !!process.env.MONGO_URL,
+  hasSessionSecret: !!process.env.SESSION_SECRET,
+  nodeEnv: process.env.NODE_ENV
+});
 
 declare module 'http' {
   interface IncomingMessage {
@@ -86,10 +91,18 @@ async function initializeApp() {
 // Vercel serverless function export
 export default async function handler(req: any, res: any) {
   try {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
     const app = await initializeApp();
     return app(req, res);
-  } catch (error) {
-    console.error('Handler error:', error);
-    return res.status(500).json({ message: 'Internal Server Error' });
+  } catch (error: any) {
+    console.error('Handler error:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    return res.status(500).json({
+      message: 'Internal Server Error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 }
