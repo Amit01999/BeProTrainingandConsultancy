@@ -67,7 +67,7 @@ async function buildAll() {
   // Bundle API function with all server code for Vercel
   // This bundles all local code but keeps node_modules external
   await esbuild({
-    entryPoints: ["api/index.ts"],
+    entryPoints: ["src/api/index.ts"],
     platform: "node",
     target: "node18",
     bundle: true,
