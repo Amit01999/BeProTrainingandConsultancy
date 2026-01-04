@@ -3,12 +3,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface Testimonial {
   id: number;
   name: string;
   nameBn: string;
-  role: string;
+  roleKey: string;
   content: string;
   contentBn: string;
   course: string;
@@ -19,7 +20,7 @@ const testimonials: Testimonial[] = [
     id: 1,
     name: 'Md. Rahim Uddin',
     nameBn: 'মোঃ রহিম উদ্দিন',
-    role: 'Graphic Designer',
+    roleKey: 'testimonials.roles.graphicDesigner',
     content:
       'The NSDA-approved training completely transformed my career. I now work as a professional graphic designer at a leading agency.',
     contentBn:
@@ -30,7 +31,7 @@ const testimonials: Testimonial[] = [
     id: 2,
     name: 'Fatema Begum',
     nameBn: 'ফাতেমা বেগম',
-    role: 'Digital Marketer',
+    roleKey: 'testimonials.roles.digitalMarketer',
     content:
       "BePro's digital marketing course gave me practical skills that I use every day. The trainers are extremely knowledgeable and supportive.",
     contentBn:
@@ -41,7 +42,7 @@ const testimonials: Testimonial[] = [
     id: 3,
     name: 'Abdul Karim',
     nameBn: 'আব্দুল করিম',
-    role: 'Entrepreneur',
+    roleKey: 'testimonials.roles.entrepreneur',
     content:
       'The entrepreneurship development program helped me start my own business. The soft skills training was invaluable.',
     contentBn:
@@ -52,7 +53,7 @@ const testimonials: Testimonial[] = [
     id: 4,
     name: 'Sharmin Akter',
     nameBn: 'শারমিন আক্তার',
-    role: 'Corporate Trainer',
+    roleKey: 'testimonials.roles.corporateTrainer',
     content:
       'After completing the SkillsBoost program, I became a certified soft skills trainer myself. This program changed my life.',
     contentBn:
@@ -62,6 +63,8 @@ const testimonials: Testimonial[] = [
 ];
 
 const TestimonialsSection = () => {
+  const { t, i18n } = useTranslation('pages');
+  const isBangla = i18n.language === 'bn';
   const [current, setCurrent] = useState(0);
 
   // Auto-rotate every 5 seconds
@@ -82,11 +85,11 @@ const TestimonialsSection = () => {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-gradient-to-r from-primary/20 via-secondary/20 to-[#FFBE06]/20 rounded-full blur-3xl" />
 
       <div className="container relative z-10 text-center mb-16">
-        <Badge variant="secondary" className="mb-4 text-sm">
-          Success Stories
+        <Badge variant="secondary" className={`mb-4 text-sm ${isBangla ? 'font-bangla' : ''}`}>
+          {t('testimonials.badge')}
         </Badge>
-        <h2 className="text-3xl md:text-5xl font-bold mb-4">
-          What Our <span className="text-gradient">Students Say</span>
+        <h2 className={`text-3xl md:text-5xl font-bold mb-4 ${isBangla ? 'font-bangla' : ''}`}>
+          {t('testimonials.title')} <span className="text-gradient">{t('testimonials.titleHighlight')}</span> {t('testimonials.titleEnd')}
         </h2>
       </div>
 
@@ -112,26 +115,19 @@ const TestimonialsSection = () => {
               <Card className="p-8 md:p-10 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <CardContent className="p-0">
                   <Quote className="h-12 w-12 text-primary/30 mb-4" />
-                  <blockquote className="text-lg mb-4 leading-relaxed">
-                    "{testimonials[current].content}"
+                  <blockquote className={`text-lg mb-6 leading-relaxed ${isBangla ? 'font-bangla' : ''}`}>
+                    "{isBangla ? testimonials[current].contentBn : testimonials[current].content}"
                   </blockquote>
-                  <p className="text-muted-foreground font-bangla mb-6 text-base">
-                    "{testimonials[current].contentBn}"
-                  </p>
                   <div className="flex items-center justify-between pt-4 border-t border-border/50">
                     <div>
-                      <div className="font-semibold text-lg">
-                        {testimonials[current].name}
+                      <div className={`font-semibold text-lg ${isBangla ? 'font-bangla' : ''}`}>
+                        {isBangla ? testimonials[current].nameBn : testimonials[current].name}
                       </div>
-                      <div className="text-sm text-muted-foreground font-bangla">
-                        {testimonials[current].nameBn}
-                      </div>
-                      <div className="text-sm text-primary mt-1.5 font-medium">
-                        {testimonials[current].role} •{' '}
-                        {testimonials[current].course}
+                      <div className={`text-sm text-primary mt-1.5 font-medium ${isBangla ? 'font-bangla' : ''}`}>
+                        {t(testimonials[current].roleKey)} • {testimonials[current].course}
                       </div>
                     </div>
-                    <Badge className="text-sm px-4 py-1.5">
+                    <Badge className={`text-sm px-4 py-1.5 ${isBangla ? 'font-bangla' : ''}`}>
                       {testimonials[current].course}
                     </Badge>
                   </div>

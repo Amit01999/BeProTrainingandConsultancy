@@ -1,0 +1,57 @@
+{
+  "nav": {
+    "home": "Home",
+    "courses": "Courses",
+    "skillsBoost": "SkillsBoost",
+    "services": "Services",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Sign up",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "admin": "Admin"
+  },
+  "footer": {
+    "tagline": "Stop learning for certificates.",
+    "description": "Learnify focuses on applied skills, real practice, and results that translate directly to your job and career.",
+    "platform": "Education platform",
+    "copyright": "© {{year}} BePro Training and Consultancy",
+    "builtFor": "Built for success, not applause"
+  },
+  "buttons": {
+    "apply": "Apply",
+    "applyNow": "Apply Now",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "viewMore": "View More",
+    "learnMore": "Learn More",
+    "getStarted": "Get Started",
+    "signUp": "Sign up",
+    "loading": "Loading..."
+  },
+  "common": {
+    "course": "Course",
+    "courses": "Courses",
+    "students": "Students",
+    "instructor": "Instructor",
+    "duration": "Duration",
+    "level": "Level",
+    "category": "Category",
+    "price": "Price",
+    "free": "Free",
+    "enrolled": "Enrolled",
+    "reviews": "Reviews",
+    "rating": "Rating"
+  },
+  "cta": {
+    "title": "Ready to",
+    "titleHighlight": "Start Your Journey?",
+    "description": "Join thousands of students who have transformed their careers with",
+    "company": "BePro Training and Consultancy",
+    "with": "with"
+  }
+}

@@ -2,6 +2,7 @@ import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const skills = [
   { name: 'Communication', nameBn: 'যোগাযোগ', level: 1 },
@@ -14,37 +15,37 @@ const skills = [
 ];
 
 const SkillsBoostPreview = () => {
+  const { t, i18n } = useTranslation('pages');
+  const isBangla = i18n.language === 'bn';
+
   return (
     <section className="py-16 bg-muted/50 px-6 lg:px-20">
       <div className="container">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
           <div>
-            <Badge variant="secondary" className="mb-4">
+            <Badge variant="secondary" className={`mb-4 ${isBangla ? 'font-bangla' : ''}`}>
               <Sparkles className="h-3 w-3 mr-1" />
-              Signature Program
+              {t('home.skillsBoost.badge')}
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              SkillsBoost <span className="text-gradient">Soft Skills</span>{' '}
-              Program
+            <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${isBangla ? 'font-bangla' : ''}`}>
+              {t('home.skillsBoost.title')} <span className="text-gradient">{t('home.skillsBoost.titleHighlight')}</span>{' '}
+              {t('home.skillsBoost.titleEnd')}
             </h2>
-            <p className="text-lg font-bangla text-muted-foreground mb-6">
-              শুরু করুন আপনার সফটস্কিলস শেখার যাত্রা
+            <p className={`text-lg text-muted-foreground mb-6 ${isBangla ? 'font-bangla' : ''}`}>
+              {t('home.skillsBoost.tagline')}
             </p>
-            <p className="text-muted-foreground mb-8">
-              Our comprehensive soft skills program takes you through a
-              carefully designed progression, building foundational
-              communication skills up to advanced emotional intelligence and
-              leadership capabilities.
+            <p className={`text-muted-foreground mb-8 ${isBangla ? 'font-bangla' : ''}`}>
+              {t('home.skillsBoost.description')}
             </p>
             <Button
-              className="border border-black"
+              className={`border border-black ${isBangla ? 'font-bangla' : ''}`}
               asChild
               variant="default"
               size="lg"
             >
               <Link to="/skillsboost">
-                Explore Program
+                {t('home.skillsBoost.exploreButton')}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -68,17 +69,20 @@ const SkillsBoostPreview = () => {
                       bg-primary text-primary-foreground border-2 border-black
                       shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1
                       ${index === 0 ? 'animate-pulse-glow' : ''}
+                      ${isBangla ? 'font-bangla' : ''}
                     `}
                     // style={{
                     //   opacity: 0.6 + index * 0.057,
                     // }}
                   >
                     <span className="font-semibold text-sm md:text-base">
-                      {skill.name}
+                      {isBangla ? skill.nameBn : skill.name}
                     </span>
-                    <span className="hidden md:inline text-xs opacity-80 ml-2 font-bangla">
-                      ({skill.nameBn})
-                    </span>
+                    {!isBangla && (
+                      <span className="hidden md:inline text-xs opacity-80 ml-2 font-bangla">
+                        ({skill.nameBn})
+                      </span>
+                    )}
                   </div>
                 </div>
               ))}

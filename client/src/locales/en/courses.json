@@ -1,0 +1,28 @@
+{
+  "filters": {
+    "allCourses": "All Courses",
+    "government": "Government (NSDA)",
+    "skillsBoost": "SkillsBoost"
+  },
+  "levels": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "all": "All Levels"
+  },
+  "categories": {
+    "all": "All Categories",
+    "programming": "Programming",
+    "design": "Design",
+    "business": "Business",
+    "marketing": "Marketing"
+  },
+  "details": {
+    "duration": "Duration",
+    "level": "Level",
+    "enrolled": "Enrolled",
+    "instructor": "Instructor",
+    "price": "Price",
+    "free": "Free"
+  }
+}

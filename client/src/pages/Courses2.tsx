@@ -13,6 +13,9 @@ import { TrendingUp, GraduationCap, Award, ArrowRight } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'wouter';
 import { useCourses } from '@/hooks/use-courses';
+import { useTranslation } from 'react-i18next';
+import { useLocalizedCourse } from '@/hooks/use-localized-content';
+import { SEO } from '@/components/SEO';
 import type { Course } from '@shared/schema';
 
 type TabType = 'all' | 'government' | 'skillsboost';
@@ -20,6 +23,8 @@ type TabType = 'all' | 'government' | 'skillsboost';
 const CoursesPage = () => {
   const [activeTab, setActiveTab] = useState<TabType>('all');
   const { data: allCourses = [], isLoading, error } = useCourses();
+  const { t, i18n } = useTranslation(['pages', 'common', 'courses']);
+  const isBangla = i18n.language === 'bn';
 
   // Debug: Log all courses when they're loaded
   useEffect(() => {

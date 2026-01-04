@@ -4,19 +4,23 @@ import { useAuth } from '@/hooks/use-auth';
 import { Menu, LogOut, User } from 'lucide-react';
 import { useState } from 'react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useTranslation } from 'react-i18next';
+import { LanguageToggle } from '@/components/LanguageToggle';
 import logo from '../asset/logo1.png';
 
 export function Navbar() {
   const { user, logoutMutation } = useAuth();
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const { t, i18n } = useTranslation('common');
+  const isBangla = i18n.language === 'bn';
 
   const links = [
-    { href: '/', label: 'Home' },
-    { href: '/courses', label: 'Courses' },
-    { href: '/skills', label: 'SkillsBoost' },
-    { href: '/services', label: 'Services' },
-    { href: '/contact', label: 'Contact' },
+    { href: '/', label: t('nav.home') },
+    { href: '/courses', label: t('nav.courses') },
+    { href: '/skills', label: t('nav.skillsBoost') },
+    { href: '/services', label: t('nav.services') },
+    { href: '/contact', label: t('nav.contact') },
   ];
 
   const handleLogout = () => {
@@ -34,6 +38,7 @@ export function Navbar() {
           className={`
             ${mobile ? 'text-xl py-3' : 'text-[15px]'}
             font-semibold tracking-wide
+            ${isBangla ? 'font-bangla' : ''}
             ${
               location === link.href
                 ? 'text-primary'
@@ -63,10 +68,11 @@ export function Navbar() {
 
         {/* Desktop Auth */}
         <div className="hidden md:flex items-center gap-4">
+          <LanguageToggle />
           {user ? (
             <>
               <Link href={user.role === 'admin' ? '/admin' : '/dashboard'}>
-                <span className="text-base font-semibold text-foreground hover:text-primary transition-colors cursor-pointer">
+                <span className={`text-base font-semibold text-foreground hover:text-primary transition-colors cursor-pointer ${isBangla ? 'font-bangla' : ''}`}>
                   {user.fullName}
                 </span>
               </Link>
@@ -75,10 +81,10 @@ export function Navbar() {
                 size="sm"
                 onClick={() => logoutMutation.mutate()}
                 disabled={logoutMutation.isPending}
-                className="rounded-md px-4"
+                className={`rounded-md px-4 ${isBangla ? 'font-bangla' : ''}`}
               >
                 <LogOut className="h-4 w-4 mr-2" />
-                Logout
+                {t('nav.logout')}
               </Button>
             </>
           ) : (
@@ -87,17 +93,17 @@ export function Navbar() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-[15px] font-semibold text-[#2E251F] hover:text-primary rounded-md"
+                  className={`text-[15px] font-semibold text-[#2E251F] hover:text-primary rounded-md ${isBangla ? 'font-bangla' : ''}`}
                 >
-                  Sign up
+                  {t('nav.login')}
                 </Button>
               </Link>
               <Link href="/register">
                 <Button
                   size="sm"
-                  className="text-[15px] font-semibold rounded-md bg-primary text-white border border-black/50 hover:border-black"
+                  className={`text-[15px] font-semibold rounded-md bg-primary text-white border border-black/50 hover:border-black ${isBangla ? 'font-bangla' : ''}`}
                 >
-                  Login
+                  {t('nav.register')}
                 </Button>
               </Link>
             </>
@@ -113,6 +119,9 @@ export function Navbar() {
           </SheetTrigger>
 
           <SheetContent side="right" className="pt-10 flex flex-col gap-8">
+            <div className="flex justify-end mb-4">
+              <LanguageToggle />
+            </div>
             <NavLinks mobile />
 
             <div className="border-t pt-6 flex flex-col gap-4">
@@ -124,31 +133,31 @@ export function Navbar() {
                   >
                     <Button
                       variant="outline"
-                      className="w-full justify-start text-base"
+                      className={`w-full justify-start text-base ${isBangla ? 'font-bangla' : ''}`}
                     >
                       <User className="mr-2 h-4 w-4" />
-                      Dashboard
+                      {t('nav.dashboard')}
                     </Button>
                   </Link>
                   <Button
                     variant="destructive"
-                    className="w-full justify-start text-base"
+                    className={`w-full justify-start text-base ${isBangla ? 'font-bangla' : ''}`}
                     onClick={handleLogout}
                   >
                     <LogOut className="mr-2 h-4 w-4" />
-                    Logout
+                    {t('nav.logout')}
                   </Button>
                 </>
               ) : (
                 <>
                   <Link href="/login" onClick={() => setIsOpen(false)}>
-                    <Button variant="outline" className="w-full text-base">
-                      Login
+                    <Button variant="outline" className={`w-full text-base ${isBangla ? 'font-bangla' : ''}`}>
+                      {t('nav.login')}
                     </Button>
                   </Link>
                   <Link href="/register" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full text-base bg-primary">
-                      Register
+                    <Button className={`w-full text-base bg-primary ${isBangla ? 'font-bangla' : ''}`}>
+                      {t('nav.register')}
                     </Button>
                   </Link>
                 </>

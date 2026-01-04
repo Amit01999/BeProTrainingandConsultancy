@@ -1,0 +1,24 @@
+{
+  "success": {
+    "applicationSubmitted": "Application submitted successfully!",
+    "messageSent": "Message sent successfully!",
+    "profileUpdated": "Profile updated successfully!",
+    "courseAdded": "Course added successfully!",
+    "loggedIn": "Logged in successfully!",
+    "registered": "Registered successfully!"
+  },
+  "error": {
+    "generic": "Something went wrong. Please try again.",
+    "networkError": "Network error. Please check your connection.",
+    "unauthorized": "Unauthorized. Please login.",
+    "notFound": "Not found",
+    "invalidCredentials": "Invalid credentials",
+    "applicationFailed": "Failed to submit application",
+    "messageFailed": "Failed to send message"
+  },
+  "loading": {
+    "courses": "Loading courses...",
+    "applications": "Loading applications...",
+    "pleaseWait": "Please wait..."
+  }
+}

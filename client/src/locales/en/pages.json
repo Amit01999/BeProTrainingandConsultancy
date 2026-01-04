@@ -1,0 +1,185 @@
+{
+  "home": {
+    "hero": {
+      "title": "Find the right",
+      "titleHighlight": "Course",
+      "titleEnd": "for you",
+      "subtitle": "See personalised recommendations crafted around your interests, abilities and long-term career goals.",
+      "transformSkills": "Transform your skills",
+      "description": "with expert-led programs designed for real-world success.",
+      "findCourse": "Find course",
+      "viewBlog": "View our blog",
+      "stats": {
+        "subjects": "Subjects",
+        "courses": "Courses",
+        "reviews": "Student reviews"
+      }
+    },
+    "seo": {
+      "title": "Home - Elevate Your Skills",
+      "description": "Welcome to BePro Training and Consultancy. Advance your career with expert-led courses and programs."
+    },
+    "skillsBoost": {
+      "badge": "Signature Program",
+      "title": "SkillsBoost",
+      "titleHighlight": "Soft Skills",
+      "titleEnd": "Program",
+      "tagline": "Start your soft skills learning journey",
+      "description": "Our comprehensive soft skills program takes you through a carefully designed progression, building foundational communication skills up to advanced emotional intelligence and leadership capabilities.",
+      "exploreButton": "Explore Program"
+    }
+  },
+  "courses": {
+    "title": "Our Courses",
+    "subtitle": "Find the right course to achieve your career goals",
+    "filters": {
+      "all": "All Courses",
+      "government": "Government (NSDA)",
+      "skillsBoost": "SkillsBoost"
+    },
+    "noCoursesFound": "No courses found",
+    "seo": {
+      "title": "Courses - Learn and Advance Your Skills",
+      "description": "Browse NSDA-approved government courses and private training programs."
+    }
+  },
+  "courseDetails": {
+    "backToCourses": "Back to Courses",
+    "whatYouLearn": "What you'll learn",
+    "courseFeatures": "Course Features",
+    "notFound": "Course not found",
+    "alreadyApplied": "Already Applied",
+    "seo": {
+      "title": "Course Details",
+      "description": "Learn more about this course and enroll today."
+    }
+  },
+  "auth": {
+    "welcomeBack": "Welcome back! Please login.",
+    "loginTitle": "Login",
+    "loginDescription": "Enter your credentials to access your account.",
+    "registerTitle": "Register",
+    "registerDescription": "Create a new account.",
+    "loggingIn": "Logging in...",
+    "registering": "Registering...",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "seo": {
+      "title": "Login or Register",
+      "description": "Login to your account or create a new one."
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Have questions about our courses? Want to partner with us?",
+    "visitUs": "Visit Us",
+    "callUs": "Call Us",
+    "emailUs": "Email Us",
+    "sendMessage": "Send us a message",
+    "submitSuccess": "Your message has been sent successfully!",
+    "submitError": "Failed to send message. Please try again.",
+    "seo": {
+      "title": "Contact Us - Get in Touch Anytime",
+      "description": "Reach out to us for any questions or inquiries."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {{name}}",
+    "myCourses": "My Courses",
+    "myApplications": "My Applications",
+    "noApplications": "No applications yet",
+    "seo": {
+      "title": "Student Dashboard",
+      "description": "Manage your courses and applications."
+    }
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "manageCourses": "Manage Courses",
+    "manageApplications": "Manage Applications",
+    "seo": {
+      "title": "Admin Panel",
+      "description": "Manage courses and applications."
+    }
+  },
+  "notFound": {
+    "title": "404 - Page Not Found",
+    "description": "Sorry, the page you're looking for doesn't exist.",
+    "goHome": "Go back home",
+    "seo": {
+      "title": "Page Not Found",
+      "description": "The page you're looking for could not be found."
+    }
+  },
+  "services": {
+    "badge": "Other Services",
+    "title": "Build Your",
+    "titleHighlight": "Career",
+    "titleEnd": "With Professional Excellence",
+    "description": "Our modern and practical training programs make you confident and skilled for corporate jobs, working abroad or higher education.",
+    "exploreButton": "Explore Services",
+    "consultationButton": "Get Consultation",
+    "learnMore": "Learn more",
+    "items": {
+      "corporateTraining": {
+        "title": "Corporate Training",
+        "desc": "Office Etiquette, Communication and Emotional Intelligence modules for Bank, Hospital, NGO & Private Sector."
+      },
+      "foreignJob": {
+        "title": "Foreign Job Orientation",
+        "desc": "Interview Skill, Personal Branding, Resume, Cover Letter and Job Application Support."
+      },
+      "languageTraining": {
+        "title": "Language Training",
+        "desc": "Professional courses to gain proficiency in English and German languages."
+      },
+      "careerSupport": {
+        "title": "Career Support",
+        "desc": "Special assistance from LinkedIn Personal Branding, Certification and Job Placement Cell."
+      }
+    },
+    "pills": {
+      "corporateTraining": "Corporate Training",
+      "foreignJob": "Foreign Job Orientation",
+      "languageTraining": "Language Training",
+      "internship": "Internship Program",
+      "higherStudy": "Higher Study Guideline"
+    }
+  },
+  "ucep": {
+    "badge": "Collaboration",
+    "partnerBadge": "Strategic Partner",
+    "partnerName": "UCEP Bangladesh",
+    "title": "Transforming Youth Through",
+    "titleHighlight": "UCEP Partnership",
+    "description": "Our strategic collaboration with UCEP Bangladesh has empowered over 850 participants in the Khulna region with essential career skills, professional grooming and direct job readiness training.",
+    "stats": {
+      "trained": "Professionals Trained",
+      "region": "Khulna Region"
+    },
+    "features": {
+      "softSkills": "Soft Skills Modules",
+      "mockInterviews": "Mock Interviews"
+    },
+    "benefits": {
+      "jobPlacement": "Job Placement Cell Support",
+      "certification": "UCEP Certification",
+      "linkedinTraining": "LinkedIn & CV Training",
+      "curriculum": "Corporate-standard Curriculum"
+    },
+    "exploreButton": "Explore Partnership"
+  },
+  "testimonials": {
+    "badge": "Success Stories",
+    "title": "What Our",
+    "titleHighlight": "Students",
+    "titleEnd": "Say",
+    "roles": {
+      "graphicDesigner": "Graphic Designer",
+      "digitalMarketer": "Digital Marketer",
+      "entrepreneur": "Entrepreneur",
+      "corporateTrainer": "Corporate Trainer"
+    }
+  }
+}

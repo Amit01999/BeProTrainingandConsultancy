@@ -1,0 +1,28 @@
+{
+  "filters": {
+    "allCourses": "সকল কোর্স",
+    "government": "সরকারি (NSDA)",
+    "skillsBoost": "স্কিলস বুস্ট"
+  },
+  "levels": {
+    "beginner": "শিক্ষানবিস",
+    "intermediate": "মধ্যবর্তী",
+    "advanced": "উন্নত",
+    "all": "সকল স্তর"
+  },
+  "categories": {
+    "all": "সকল বিভাগ",
+    "programming": "প্রোগ্রামিং",
+    "design": "ডিজাইন",
+    "business": "ব্যবসা",
+    "marketing": "মার্কেটিং"
+  },
+  "details": {
+    "duration": "সময়কাল",
+    "level": "স্তর",
+    "enrolled": "নাম লেখানো",
+    "instructor": "প্রশিক্ষক",
+    "price": "মূল্য",
+    "free": "বিনামূল্যে"
+  }
+}

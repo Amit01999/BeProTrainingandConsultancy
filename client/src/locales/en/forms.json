@@ -1,0 +1,35 @@
+{
+  "labels": {
+    "fullName": "Full Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "username": "Username",
+    "password": "Password",
+    "message": "Message",
+    "name": "Name",
+    "phoneNumber": "Phone Number"
+  },
+  "placeholders": {
+    "enterFullName": "Enter your full name",
+    "enterEmail": "Enter your email",
+    "enterPhone": "Enter your phone number",
+    "enterUsername": "Enter username",
+    "enterPassword": "Enter password",
+    "enterMessage": "Enter your message",
+    "enterName": "Enter your name",
+    "enterPhoneNumber": "Enter your phone number"
+  },
+  "validation": {
+    "required": "{{field}} is required",
+    "emailInvalid": "Please enter a valid email address",
+    "phoneInvalid": "Please enter a valid phone number",
+    "minLength": "Must be at least {{min}} characters",
+    "maxLength": "Must be at most {{max}} characters"
+  },
+  "applicationModal": {
+    "title": "Apply for Course",
+    "submitting": "Submitting...",
+    "success": "Application submitted successfully!",
+    "error": "Failed to submit application. Please try again."
+  }
+}

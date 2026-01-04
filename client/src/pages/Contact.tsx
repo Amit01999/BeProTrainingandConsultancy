@@ -8,9 +8,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslation } from 'react-i18next';
+import { SEO } from '@/components/SEO';
 
 export default function Contact() {
   const createContact = useCreateContact();
+  const { t, i18n } = useTranslation(['pages', 'forms', 'common']);
+  const isBangla = i18n.language === 'bn';
 
   const form = useForm<InsertContact>({
     resolver: zodResolver(insertContactSchema),
@@ -30,11 +34,12 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 md:py-20">
+      <SEO titleKey="contact.seo.title" descriptionKey="contact.seo.description" />
       <div className="container mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h1 className="text-4xl font-display font-bold text-slate-900 mb-4">Get in Touch</h1>
-          <p className="text-slate-600 text-lg">
-            Have questions about our courses? Want to partner with us? Fill out the form below or visit our campus.
+          <h1 className={`text-4xl font-display font-bold text-slate-900 mb-4 ${isBangla ? 'font-bangla' : ''}`}>{t('pages:contact.title')}</h1>
+          <p className={`text-slate-600 text-lg ${isBangla ? 'font-bangla' : ''}`}>
+            {t('pages:contact.subtitle')}
           </p>
         </div>
 
@@ -48,8 +53,8 @@ export default function Contact() {
                     <MapPin className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Visit Us</h3>
-                    <p className="text-slate-600">UCEP Khulna Region, <br/>7 Joynal Road, Boyra, Khulna</p>
+                    <h3 className={`font-bold text-lg mb-1 ${isBangla ? 'font-bangla' : ''}`}>{t('pages:contact.visitUs')}</h3>
+                    <p className={`text-slate-600 ${isBangla ? 'font-bangla' : ''}`}>UCEP Khulna Region, <br/>7 Joynal Road, Boyra, Khulna</p>
                   </div>
                 </CardContent>
               </Card>
@@ -60,9 +65,9 @@ export default function Contact() {
                     <Phone className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Call Us</h3>
+                    <h3 className={`font-bold text-lg mb-1 ${isBangla ? 'font-bangla' : ''}`}>{t('pages:contact.callUs')}</h3>
                     <p className="text-slate-600">+880 1234 567890</p>
-                    <p className="text-slate-500 text-sm">Mon-Fri from 9am to 5pm</p>
+                    <p className={`text-slate-500 text-sm ${isBangla ? 'font-bangla' : ''}`}>Mon-Fri from 9am to 5pm</p>
                   </div>
                 </CardContent>
               </Card>
@@ -73,7 +78,7 @@ export default function Contact() {
                     <Mail className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Email Us</h3>
+                    <h3 className={`font-bold text-lg mb-1 ${isBangla ? 'font-bangla' : ''}`}>{t('pages:contact.emailUs')}</h3>
                     <p className="text-slate-600">info@beprotraining.com</p>
                     <p className="text-slate-600">support@beprotraining.com</p>
                   </div>
@@ -97,7 +102,7 @@ export default function Contact() {
           {/* Contact Form */}
           <Card className="shadow-2xl border-slate-100">
             <CardContent className="p-8">
-              <h3 className="text-2xl font-bold font-display mb-6">Send us a Message</h3>
+              <h3 className={`text-2xl font-bold font-display mb-6 ${isBangla ? 'font-bangla' : ''}`}>{t('pages:contact.sendMessage')}</h3>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <FormField
@@ -105,9 +110,9 @@ export default function Contact() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Full Name</FormLabel>
+                        <FormLabel className={isBangla ? 'font-bangla' : ''}>{t('forms:labels.fullName')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="John Doe" className="h-11" {...field} />
+                          <Input placeholder={t('forms:placeholders.enterFullName')} className={`h-11 ${isBangla ? 'font-bangla' : ''}`} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -119,9 +124,9 @@ export default function Contact() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel className={isBangla ? 'font-bangla' : ''}>{t('forms:labels.email')}</FormLabel>
                           <FormControl>
-                            <Input placeholder="john@example.com" className="h-11" {...field} />
+                            <Input placeholder={t('forms:placeholders.enterEmail')} className="h-11" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -132,9 +137,9 @@ export default function Contact() {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Phone (Optional)</FormLabel>
+                          <FormLabel className={isBangla ? 'font-bangla' : ''}>{t('forms:labels.phone')}</FormLabel>
                           <FormControl>
-                            <Input placeholder="+880..." className="h-11" {...field} value={field.value || ""} />
+                            <Input placeholder={t('forms:placeholders.enterPhone')} className={`h-11 ${isBangla ? 'font-bangla' : ''}`} {...field} value={field.value || ""} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -146,7 +151,7 @@ export default function Contact() {
                     name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Message</FormLabel>
+                        <FormLabel className={isBangla ? 'font-bangla' : ''}>{t('forms:labels.message')}</FormLabel>
                         <FormControl>
                           <Textarea placeholder="How can we help you?" className="min-h-[150px] resize-none" {...field} />
                         </FormControl>

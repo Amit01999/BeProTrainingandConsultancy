@@ -9,30 +9,33 @@ import {
 import React, { useState } from 'react';
 import { Link } from 'wouter';
 import { Button } from './ui/button';
+import { useTranslation } from 'react-i18next';
 
 export default function TopCourse() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const { t, i18n } = useTranslation('pages');
+  const isBangla = i18n.language === 'bn';
 
   const services = [
     {
       icon: Building2,
-      title: 'Corporate Training',
-      desc: 'Bank, Hospital, NGO & Private Sector এর জন্য Office Etiquette, Communication ও Emotional Intelligence মডিউল।',
+      titleKey: 'services.items.corporateTraining.title',
+      descKey: 'services.items.corporateTraining.desc',
     },
     {
       icon: Globe2,
-      title: 'Foreign Job Orientation',
-      desc: 'Interview Skill, Personal Branding, Resume, Cover Letter ও Job Application Support।',
+      titleKey: 'services.items.foreignJob.title',
+      descKey: 'services.items.foreignJob.desc',
     },
     {
       icon: GraduationCap,
-      title: 'Language Training',
-      desc: 'English ও German ভাষায় দক্ষতা অর্জনের প্রফেশনাল কোর্স।',
+      titleKey: 'services.items.languageTraining.title',
+      descKey: 'services.items.languageTraining.desc',
     },
     {
       icon: Briefcase,
-      title: 'Career Support',
-      desc: 'LinkedIn Personal Branding, Certification ও Job Placement Cell থেকে বিশেষ সহায়তা।',
+      titleKey: 'services.items.careerSupport.title',
+      descKey: 'services.items.careerSupport.desc',
     },
   ];
 
@@ -46,38 +49,34 @@ export default function TopCourse() {
           {/* Left Content */}
           <div>
             <div className="inline-block mb-8">
-              <span className="text-sm font-medium text-primary tracking-wider uppercase border-b-2 border-primary pb-1">
-                অন্যান্য সেবা
+              <span className={`text-sm font-medium text-primary tracking-wider uppercase border-b-2 border-primary pb-1 ${isBangla ? 'font-bangla' : ''}`}>
+                {t('services.badge')}
               </span>
             </div>
 
-            <h2 className="text-5xl md:text-6xl font-bold mb-6 leading-[1.1] tracking-tight">
-              Build Your <span className="text-primary">Career</span>
+            <h2 className={`text-5xl md:text-6xl font-bold mb-6 leading-[1.1] tracking-tight ${isBangla ? 'font-bangla' : ''}`}>
+              {t('services.title')} <span className="text-primary">{t('services.titleHighlight')}</span>
               <br />
-              <span className="text-foreground/60">With Professional</span>
-              <br />
-              Excellence
+              <span className="text-foreground/60">{t('services.titleEnd')}</span>
             </h2>
 
-            <p className="text-lg text-foreground/60 mb-12 max-w-lg leading-relaxed">
-              আমাদের আধুনিক ও বাস্তবমুখী ট্রেনিং প্রোগ্রামগুলো আপনাকে কর্পোরেট
-              জব, বিদেশে কাজ অথবা উচ্চশিক্ষার জন্য আত্মবিশ্বাসী ও দক্ষ করে গড়ে
-              তোলে।
+            <p className={`text-lg text-foreground/60 mb-12 max-w-lg leading-relaxed ${isBangla ? 'font-bangla' : ''}`}>
+              {t('services.description')}
             </p>
 
             {/* Service Pills */}
             <div className="space-y-3 mb-14">
               {[
-                'Corporate Training',
-                'Foreign Job Orientation',
-                'Language Training',
-                'Internship Program',
-                'Higher Study Guideline',
-              ].map((item, i) => (
+                'services.pills.corporateTraining',
+                'services.pills.foreignJob',
+                'services.pills.languageTraining',
+                'services.pills.internship',
+                'services.pills.higherStudy',
+              ].map((key, i) => (
                 <div key={i} className="inline-flex items-center mr-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-primary mr-3" />
-                  <span className="text-foreground/70 hover:text-foreground transition-colors cursor-default">
-                    {item}
+                  <span className={`text-foreground/70 hover:text-foreground transition-colors cursor-default ${isBangla ? 'font-bangla' : ''}`}>
+                    {t(key)}
                   </span>
                 </div>
               ))}
@@ -87,18 +86,18 @@ export default function TopCourse() {
               <Link href="/services">
                 <Button
                   size="lg"
-                  className="bg-primary hover:bg-primary/90 text-white px-8 h-14 text-base font-medium border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                  className={`bg-primary hover:bg-primary/90 text-white px-8 h-14 text-base font-medium border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all ${isBangla ? 'font-bangla' : ''}`}
                 >
-                  Explore Services
+                  {t('services.exploreButton')}
                 </Button>
               </Link>
               <Link href="/contact">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="bg-white text-foreground border-2 border-black px-8 h-14 text-base font-medium shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                  className={`bg-white text-foreground border-2 border-black px-8 h-14 text-base font-medium shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all ${isBangla ? 'font-bangla' : ''}`}
                 >
-                  Get Consultation
+                  {t('services.consultationButton')}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
@@ -145,19 +144,19 @@ export default function TopCourse() {
                       <Icon className="w-6 h-6" />
                     </div>
 
-                    <h4 className="font-semibold text-lg mb-1.5 text-primary">
-                      {item.title}
+                    <h4 className={`font-semibold text-lg mb-1.5 text-primary ${isBangla ? 'font-bangla' : ''}`}>
+                      {t(item.titleKey)}
                     </h4>
 
-                    <p className="text-sm text-foreground/70 leading-relaxed">
-                      {item.desc}
+                    <p className={`text-sm text-foreground/70 leading-relaxed ${isBangla ? 'font-bangla' : ''}`}>
+                      {t(item.descKey)}
                     </p>
 
                     <div
                       className={`mt-3 inline-flex items-center text-primary text-sm font-medium transition
-            ${isActive ? 'opacity-100 translate-x-1' : 'opacity-0'}`}
+            ${isActive ? 'opacity-100 translate-x-1' : 'opacity-0'} ${isBangla ? 'font-bangla' : ''}`}
                     >
-                      Learn more <ArrowRight className="ml-1 w-4 h-4" />
+                      {t('services.learnMore')} <ArrowRight className="ml-1 w-4 h-4" />
                     </div>
                   </div>
                 </div>

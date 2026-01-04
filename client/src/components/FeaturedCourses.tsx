@@ -13,6 +13,8 @@ import { TrendingUp, GraduationCap, Award, ArrowRight } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'wouter';
 import { useCourses } from '@/hooks/use-courses';
+import { useTranslation } from 'react-i18next';
+import { useLocalizedCourse } from '@/hooks/use-localized-content';
 import type { Course } from '@shared/schema';
 
 type TabType = 'all' | 'government' | 'skillsboost';
@@ -20,6 +22,8 @@ type TabType = 'all' | 'government' | 'skillsboost';
 const FeaturedCourses = () => {
   const [activeTab, setActiveTab] = useState<TabType>('all');
   const { data: allCourses = [], isLoading, error } = useCourses();
+  const { t, i18n } = useTranslation(['common', 'courses', 'messages']);
+  const isBangla = i18n.language === 'bn';
 
   // Debug: Log all courses when they're loaded
   useEffect(() => {
@@ -113,11 +117,11 @@ const FeaturedCourses = () => {
                   activeTab === 'all'
                     ? 'bg-primary text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
                     : 'text-gray-700 bg-white border-transparent hover:border-black'
-                }`}
+                } ${isBangla ? 'font-bangla' : ''}`}
                 onClick={() => handleTabChange('all')}
               >
                 <GraduationCap className="h-4 w-4 mr-2" />
-                All Courses ▼
+                {t('courses:filters.allCourses')} ▼
               </button>
 
               <button
@@ -125,11 +129,11 @@ const FeaturedCourses = () => {
                   activeTab === 'government'
                     ? 'bg-primary text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
                     : 'text-gray-700 bg-white border-transparent hover:border-black'
-                }`}
+                } ${isBangla ? 'font-bangla' : ''}`}
                 onClick={() => handleTabChange('government')}
               >
                 <Award className="h-4 w-4 mr-2" />
-                Government (NSDA)
+                {t('courses:filters.government')}
               </button>
 
               <button
@@ -137,11 +141,11 @@ const FeaturedCourses = () => {
                   activeTab === 'skillsboost'
                     ? 'bg-primary text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
                     : 'text-gray-700 bg-white border-transparent hover:border-black'
-                }`}
+                } ${isBangla ? 'font-bangla' : ''}`}
                 onClick={() => handleTabChange('skillsboost')}
               >
                 <TrendingUp className="h-4 w-4 mr-2" />
-                SkillsBoost Course
+                {t('courses:filters.skillsBoost')}
               </button>
             </div>
           </div>
@@ -157,8 +161,8 @@ const FeaturedCourses = () => {
                 <div className="h-16 w-16 rounded-full border-4 border-gray-200"></div>
                 <div className="absolute top-0 left-0 h-16 w-16 rounded-full border-4 border-[#FF6947] border-t-transparent animate-spin"></div>
               </div>
-              <p className="mt-6 text-lg text-gray-600 font-medium">
-                Loading courses...
+              <p className={`mt-6 text-lg text-gray-600 font-medium ${isBangla ? 'font-bangla' : ''}`}>
+                {t('messages:loading.courses')}
               </p>
             </div>
           )}

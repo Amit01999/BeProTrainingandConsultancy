@@ -1,0 +1,35 @@
+{
+  "labels": {
+    "fullName": "পূর্ণ নাম",
+    "email": "ইমেইল",
+    "phone": "ফোন নম্বর",
+    "username": "ইউজারনেম",
+    "password": "পাসওয়ার্ড",
+    "message": "বার্তা",
+    "name": "নাম",
+    "phoneNumber": "ফোন নম্বর"
+  },
+  "placeholders": {
+    "enterFullName": "আপনার পূর্ণ নাম লিখুন",
+    "enterEmail": "আপনার ইমেইল লিখুন",
+    "enterPhone": "আপনার ফোন নম্বর লিখুন",
+    "enterUsername": "ইউজারনেম লিখুন",
+    "enterPassword": "পাসওয়ার্ড লিখুন",
+    "enterMessage": "আপনার বার্তা লিখুন",
+    "enterName": "আপনার নাম লিখুন",
+    "enterPhoneNumber": "আপনার ফোন নম্বর লিখুন"
+  },
+  "validation": {
+    "required": "{{field}} প্রয়োজনীয়",
+    "emailInvalid": "সঠিক ইমেইল ঠিকানা দিন",
+    "phoneInvalid": "সঠিক ফোন নম্বর দিন",
+    "minLength": "কমপক্ষে {{min}} অক্ষর হতে হবে",
+    "maxLength": "সর্বোচ্চ {{max}} অক্ষর হতে পারে"
+  },
+  "applicationModal": {
+    "title": "কোর্সের জন্য আবেদন করুন",
+    "submitting": "জমা দেওয়া হচ্ছে...",
+    "success": "আবেদন সফলভাবে জমা দেওয়া হয়েছে!",
+    "error": "আবেদন জমা দিতে ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।"
+  }
+}
