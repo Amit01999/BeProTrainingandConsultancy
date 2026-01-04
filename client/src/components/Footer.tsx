@@ -8,7 +8,7 @@ export function Footer() {
 
   return (
     <footer className="bg-foreground text-white border-t border-white/15">
-      <div className="container mx-auto px-4 lg:px-12 py-12">
+      <div className="container mx-auto px-4 lg:px-12 py-16">
         {/* Header Block */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-20 mb-20">
           {/* Brand Section */}

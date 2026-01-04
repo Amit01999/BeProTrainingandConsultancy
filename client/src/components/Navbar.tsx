@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
-import { Menu, LogOut, User } from 'lucide-react';
+import { Menu, LogOut, User, X } from 'lucide-react';
 import { useState } from 'react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useTranslation } from 'react-i18next';
@@ -36,15 +36,21 @@ export function Navbar() {
           href={link.href}
           onClick={() => mobile && setIsOpen(false)}
           className={`
-            ${mobile ? 'text-xl py-3' : 'text-[15px]'}
+            ${
+              mobile
+                ? 'text-lg py-3 px-4 rounded-lg hover:bg-gray-50'
+                : 'text-[15px]'
+            }
             font-semibold tracking-wide
             ${isBangla ? 'font-bangla' : ''}
             ${
               location === link.href
-                ? 'text-primary'
-                : 'text-[#2E251F] hover:text-foreground'
+                ? mobile
+                  ? 'text-primary bg-primary/5'
+                  : 'text-primary'
+                : 'text-[#2E251F] hover:text-primary'
             }
-            transition-colors
+            transition-all duration-200
           `}
         >
           {link.label}
@@ -61,7 +67,7 @@ export function Navbar() {
           <img src={logo} className="w-16 h-auto" alt="Logo" />
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-10">
           <NavLinks />
         </div>
@@ -72,7 +78,7 @@ export function Navbar() {
           {user ? (
             <>
               <Link href={user.role === 'admin' ? '/admin' : '/dashboard'}>
-                <span className={`text-base font-semibold text-foreground hover:text-primary transition-colors cursor-pointer ${isBangla ? 'font-bangla' : ''}`}>
+                <span className="text-base font-semibold cursor-pointer hover:text-primary">
                   {user.fullName}
                 </span>
               </Link>
@@ -80,8 +86,6 @@ export function Navbar() {
                 variant="outline"
                 size="sm"
                 onClick={() => logoutMutation.mutate()}
-                disabled={logoutMutation.isPending}
-                className={`rounded-md px-4 ${isBangla ? 'font-bangla' : ''}`}
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 {t('nav.logout')}
@@ -90,21 +94,12 @@ export function Navbar() {
           ) : (
             <>
               <Link href="/login">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`text-[15px] font-semibold text-[#2E251F] hover:text-primary rounded-md ${isBangla ? 'font-bangla' : ''}`}
-                >
+                <Button variant="ghost" size="sm">
                   {t('nav.login')}
                 </Button>
               </Link>
               <Link href="/register">
-                <Button
-                  size="sm"
-                  className={`text-[15px] font-semibold rounded-md bg-primary text-white border border-black/50 hover:border-black ${isBangla ? 'font-bangla' : ''}`}
-                >
-                  {t('nav.register')}
-                </Button>
+                <Button size="sm">{t('nav.register')}</Button>
               </Link>
             </>
           )}
@@ -118,13 +113,31 @@ export function Navbar() {
             </Button>
           </SheetTrigger>
 
-          <SheetContent side="right" className="pt-10 flex flex-col gap-8">
-            <div className="flex justify-end mb-4">
-              <LanguageToggle />
+          <SheetContent
+            side="right"
+            className="bg-white w-[320px] p-0 flex flex-col"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 h-16 border-b sticky top-0 bg-white z-20 shadow-sm">
+              <img src={logo} className="w-12" />
+              <div className="flex items-center gap-3">
+                <LanguageToggle />
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 rounded-md hover:bg-gray-100"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
-            <NavLinks mobile />
 
-            <div className="border-t pt-6 flex flex-col gap-4">
+            {/* Links */}
+            <nav className="flex flex-col gap-1 px-6 py-6 flex-1 overflow-y-auto">
+              <NavLinks mobile />
+            </nav>
+
+            {/* Auth */}
+            <div className="border-t px-6 py-5">
               {user ? (
                 <>
                   <Link
@@ -133,30 +146,32 @@ export function Navbar() {
                   >
                     <Button
                       variant="outline"
-                      className={`w-full justify-start text-base ${isBangla ? 'font-bangla' : ''}`}
+                      className="w-full h-12 mb-3 justify-start"
                     >
-                      <User className="mr-2 h-4 w-4" />
+                      <User className="mr-2 h-5 w-5" />
                       {t('nav.dashboard')}
                     </Button>
                   </Link>
+
                   <Button
                     variant="destructive"
-                    className={`w-full justify-start text-base ${isBangla ? 'font-bangla' : ''}`}
                     onClick={handleLogout}
+                    className="w-full h-12 justify-start"
                   >
-                    <LogOut className="mr-2 h-4 w-4" />
+                    <LogOut className="mr-2 h-5 w-5" />
                     {t('nav.logout')}
                   </Button>
                 </>
               ) : (
                 <>
                   <Link href="/login" onClick={() => setIsOpen(false)}>
-                    <Button variant="outline" className={`w-full text-base ${isBangla ? 'font-bangla' : ''}`}>
+                    <Button variant="outline" className="w-full h-12 mb-3">
                       {t('nav.login')}
                     </Button>
                   </Link>
+
                   <Link href="/register" onClick={() => setIsOpen(false)}>
-                    <Button className={`w-full text-base bg-primary ${isBangla ? 'font-bangla' : ''}`}>
+                    <Button className="w-full h-12 bg-primary">
                       {t('nav.register')}
                     </Button>
                   </Link>

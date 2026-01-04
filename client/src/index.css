@@ -91,9 +91,18 @@
     @apply border-border;
   }
 
+  html,
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-body);
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  #root {
+    overflow-x: hidden;
+    width: 100%;
   }
 
   h1,
@@ -113,6 +122,31 @@
   font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.6;
+}
+
+/* Mobile-specific Bangla typography adjustments */
+@media (max-width: 640px) {
+  .font-bangla {
+    letter-spacing: -0.01em;
+    line-height: 1.55;
+  }
+
+  .font-bangla h1,
+  .font-bangla h2,
+  .font-bangla h3 {
+    letter-spacing: 0;
+    line-height: 1.2;
+  }
+
+  .font-bangla p {
+    line-height: 1.65;
+    letter-spacing: -0.005em;
+  }
+
+  .font-bangla button,
+  .font-bangla a {
+    letter-spacing: -0.01em;
+  }
 }
 
 /* Custom Utilities */

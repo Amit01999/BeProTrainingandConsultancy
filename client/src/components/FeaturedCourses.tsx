@@ -106,45 +106,45 @@ const FeaturedCourses = () => {
   };
 
   return (
-    <div className="min-h-screen px-6 lg:px-16">
+    <div className="min-h-screen w-full">
       {/* Improved Tab Filter Section - Sticky */}
-      <section className=" backdrop-blur-lg ">
-        <div className="container mx-auto px-6 lg:px-16">
-          <div className="flex items-center justify-center py-5 overflow-x-auto scrollbar-hide">
-            <div className="flex bg-white rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-1 gap-2">
+      <section className="backdrop-blur-lg w-full">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-16 max-w-screen-2xl">
+          <div className="flex items-center justify-center py-4 sm:py-5 overflow-x-auto scrollbar-hide">
+            <div className="flex bg-white rounded-lg sm:rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-1 gap-1.5 sm:gap-2">
               <button
-                className={`relative px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 whitespace-nowrap flex items-center border-2 ${
+                className={`relative px-3 sm:px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-md sm:rounded-lg transition-all duration-200 whitespace-nowrap flex items-center border-2 ${
                   activeTab === 'all'
                     ? 'bg-primary text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
                     : 'text-gray-700 bg-white border-transparent hover:border-black'
                 } ${isBangla ? 'font-bangla' : ''}`}
                 onClick={() => handleTabChange('all')}
               >
-                <GraduationCap className="h-4 w-4 mr-2" />
+                <GraduationCap className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                 {t('courses:filters.allCourses')} ▼
               </button>
 
               <button
-                className={`relative px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 whitespace-nowrap flex items-center border-2 ${
+                className={`relative px-3 sm:px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-md sm:rounded-lg transition-all duration-200 whitespace-nowrap flex items-center border-2 ${
                   activeTab === 'government'
                     ? 'bg-primary text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
                     : 'text-gray-700 bg-white border-transparent hover:border-black'
                 } ${isBangla ? 'font-bangla' : ''}`}
                 onClick={() => handleTabChange('government')}
               >
-                <Award className="h-4 w-4 mr-2" />
+                <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                 {t('courses:filters.government')}
               </button>
 
               <button
-                className={`relative px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 whitespace-nowrap flex items-center border-2 ${
+                className={`relative px-3 sm:px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-md sm:rounded-lg transition-all duration-200 whitespace-nowrap flex items-center border-2 ${
                   activeTab === 'skillsboost'
                     ? 'bg-primary text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
                     : 'text-gray-700 bg-white border-transparent hover:border-black'
                 } ${isBangla ? 'font-bangla' : ''}`}
                 onClick={() => handleTabChange('skillsboost')}
               >
-                <TrendingUp className="h-4 w-4 mr-2" />
+                <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                 {t('courses:filters.skillsBoost')}
               </button>
             </div>
@@ -152,8 +152,8 @@ const FeaturedCourses = () => {
         </div>
       </section>
       {/* Courses Section */}
-      <section className="py-16 ">
-        <div className="container mx-auto px-6 lg:px-16">
+      <section className="py-16 w-full">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-16 max-w-screen-2xl">
           {/* Loading State */}
           {isLoading && (
             <div className="flex flex-col items-center justify-center py-32">
