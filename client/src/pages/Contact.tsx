@@ -153,14 +153,14 @@ export default function Contact() {
                       <FormItem>
                         <FormLabel className={isBangla ? 'font-bangla' : ''}>{t('forms:labels.message')}</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="How can we help you?" className="min-h-[150px] resize-none" {...field} />
+                          <Textarea placeholder={t('forms:placeholders.enterMessage')} className={`min-h-[150px] resize-none ${isBangla ? 'font-bangla' : ''}`} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full h-12 text-lg font-bold bg-primary hover:bg-primary/90 text-white" disabled={createContact.isPending}>
-                    {createContact.isPending ? "Sending..." : "Send Message"}
+                  <Button type="submit" className={`w-full h-12 text-lg font-bold bg-primary hover:bg-primary/90 text-white ${isBangla ? 'font-bangla' : ''}`} disabled={createContact.isPending}>
+                    {createContact.isPending ? t('common:sending') : t('forms:buttons.sendMessage')}
                   </Button>
                 </form>
               </Form>

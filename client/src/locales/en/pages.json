@@ -181,5 +181,139 @@
       "entrepreneur": "Entrepreneur",
       "corporateTrainer": "Corporate Trainer"
     }
+  },
+  "skillsBoostPage": {
+    "hero": {
+      "title": "SkillsBoost",
+      "subtitle": "Go beyond technical skills. Master the soft skills that drive leadership, emotional intelligence, and professional excellence."
+    },
+    "progression": {
+      "badge": "Skill Progression",
+      "title": "Your",
+      "titleHighlight": "Learning Journey",
+      "description": "Progress through carefully designed levels, each building upon the previous to create a complete professional skill set."
+    },
+    "features": {
+      "emotionalIntelligence": {
+        "title": "Emotional Intelligence",
+        "desc": "Understand and manage emotions effectively."
+      },
+      "leadership": {
+        "title": "Leadership",
+        "desc": "Inspire teams and drive organizational success."
+      },
+      "communication": {
+        "title": "Communication",
+        "desc": "Articulate ideas clearly and persuasively."
+      },
+      "problemSolving": {
+        "title": "Problem Solving",
+        "desc": "Navigate complex challenges with strategic thinking."
+      }
+    },
+    "whySoftSkills": {
+      "title": "Why Soft Skills Matter?",
+      "description": "In today's competitive job market, technical skills get you the interview, but soft skills get you the job—and the promotion.",
+      "stats": {
+        "jobSuccess": "85% of job success comes from soft skills",
+        "management": "Essential for management roles",
+        "collaboration": "Improves workplace collaboration"
+      },
+      "button": "View SkillsBoost Courses"
+    }
+  },
+  "corporateServicesPage": {
+    "hero": {
+      "badge": "Professional Services",
+      "title": "Corporate & Foreign",
+      "titleHighlight": "Services",
+      "subtitle": "Corporate training and foreign job orientation services"
+    },
+    "corporateTraining": {
+      "badge": "For Organizations",
+      "title": "Corporate",
+      "titleHighlight": "Training",
+      "description": "Tailored training programs for banks, hospitals, NGOs, and corporate organizations. We help your team develop essential professional skills.",
+      "button": "Request Training",
+      "services": {
+        "officeEtiquette": "Office Etiquette Training",
+        "professionalCommunication": "Professional Communication",
+        "emotionalIntelligence": "Emotional Intelligence",
+        "teamBuilding": "Team Building",
+        "workplaceCommunication": "Day-to-day Workplace Communication",
+        "leadershipDevelopment": "Leadership Development"
+      }
+    },
+    "foreignJob": {
+      "badge": "For Overseas Workers",
+      "title": "Foreign Job",
+      "titleHighlight": "Orientation",
+      "subtitle": "Complete preparation for overseas jobs - from CV writing to interview preparation",
+      "services": {
+        "cvWriting": {
+          "title": "CV Writing",
+          "description": "Professional resume crafting for international opportunities"
+        },
+        "interviewSkills": {
+          "title": "Interview Skills",
+          "description": "Mock interviews and preparation techniques"
+        },
+        "basicEnglish": {
+          "title": "Basic English",
+          "description": "Essential English communication for overseas work"
+        },
+        "culturalOrientation": {
+          "title": "Cultural Orientation",
+          "description": "Understanding workplace culture abroad"
+        }
+      }
+    },
+    "otherServices": {
+      "badge": "Additional Programs",
+      "title": "Other",
+      "titleHighlight": "Services",
+      "services": {
+        "englishLanguage": {
+          "title": "English Language Training",
+          "description": "Professional English courses for career advancement",
+          "fee": "৳2,000"
+        },
+        "germanLanguage": {
+          "title": "German Language Training",
+          "description": "German language for work and study opportunities in Germany",
+          "fee": "৳5,000"
+        },
+        "internship": {
+          "title": "Internship Program",
+          "description": "Hands-on experience with partner organizations",
+          "fee": "Contact"
+        },
+        "higherStudy": {
+          "title": "Higher Study Guidance",
+          "description": "Complete guidance for studying abroad",
+          "fee": "Consultation"
+        },
+        "linkedinBranding": {
+          "title": "LinkedIn Personal Branding",
+          "description": "Build your professional online presence",
+          "fee": "৳1,500"
+        },
+        "certificationPlacement": {
+          "title": "Certification & Job Placement",
+          "description": "Industry-recognized certification with job support",
+          "fee": "Included"
+        }
+      },
+      "learnMore": "Learn More"
+    },
+    "cta": {
+      "title": "Need a Custom Solution?",
+      "subtitle": "Contact us to create custom training programs for your organization",
+      "button": "Contact Us"
+    },
+    "seo": {
+      "title": "Corporate & Foreign Services | BePro Training",
+      "description": "Corporate training for banks, NGOs, hospitals. Foreign job orientation, language training, higher study guidance."
+    }
   }
 }

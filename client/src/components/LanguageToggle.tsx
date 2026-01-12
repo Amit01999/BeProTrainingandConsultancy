@@ -26,15 +26,15 @@ export function LanguageToggle() {
       <DropdownMenuContent align="end">
         <DropdownMenuItem
           onClick={() => changeLanguage('bn')}
-          className={i18n.language === 'bn' ? 'bg-accent' : ''}
+          className={i18n.language === 'bn' ? 'bg-primary/10 text-primary font-bold' : ''}
         >
-          <span className="font-bangla">বাংলা</span>
+          <span className="font-bangla text-base">বাংলা</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => changeLanguage('en')}
-          className={i18n.language === 'en' ? 'bg-accent' : ''}
+          className={i18n.language === 'en' ? 'bg-primary/10 text-primary font-bold' : ''}
         >
-          English
+          <span className="text-base">English</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

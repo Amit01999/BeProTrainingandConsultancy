@@ -37,7 +37,8 @@ i18n
   .use(initReactI18next) // Passes i18n instance to react-i18next
   .init({
     resources,
-    fallbackLng: 'bn', // Bangla as default
+    lng: 'bn', // Set Bangla as default for first-time users
+    fallbackLng: 'bn', // Bangla as fallback
     defaultNS: 'common',
     ns: ['common', 'pages', 'forms', 'courses', 'messages'],
 
