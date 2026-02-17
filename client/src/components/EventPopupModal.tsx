@@ -205,7 +205,7 @@ export default function EventPopupModal() {
                     </p>
                     <p className="inline-flex items-center gap-1 text-[11px] text-gray-600">
                       <Phone size={10} className="text-[#8B3A6B]" />
-                      <span className="font-medium">01626085537</span>
+                      <span className="font-medium">01626085837</span>
                     </p>
                   </div>
                   <div className="text-right">
