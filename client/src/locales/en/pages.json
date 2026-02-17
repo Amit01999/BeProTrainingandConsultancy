@@ -21,7 +21,7 @@
     },
     "skillsBoost": {
       "badge": "Signature Program",
-      "title": "SkillsBoost",
+      "title": "Skills Development",
       "titleHighlight": "Soft Skills",
       "titleEnd": "Program",
       "tagline": "Start your soft skills learning journey",
@@ -35,7 +35,7 @@
     "filters": {
       "all": "All Courses",
       "government": "Government (NSDA)",
-      "skillsBoost": "SkillsBoost"
+      "skillsBoost": "Skills Development"
     },
     "noCoursesFound": "No courses found",
     "seo": {
@@ -184,7 +184,7 @@
   },
   "skillsBoostPage": {
     "hero": {
-      "title": "SkillsBoost",
+      "title": "Skills Development",
       "subtitle": "Go beyond technical skills. Master the soft skills that drive leadership, emotional intelligence, and professional excellence."
     },
     "progression": {
@@ -219,7 +219,7 @@
         "management": "Essential for management roles",
         "collaboration": "Improves workplace collaboration"
       },
-      "button": "View SkillsBoost Courses"
+      "button": "View Skills Development Courses"
     }
   },
   "corporateServicesPage": {
