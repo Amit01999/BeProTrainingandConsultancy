@@ -17,16 +17,28 @@ import { coursesData, type Course } from '@/data/coursesData';
 
 type FilterTab = 'all' | 'nsda' | 'skills';
 
-const filterTabs: { key: FilterTab; label: string; icon: React.ReactNode }[] = [
-  { key: 'all', label: 'All Courses', icon: <Layers className="h-4 w-4" /> },
+const filterTabs: {
+  key: FilterTab;
+  label: string;
+  shortLabel: string;
+  icon: React.ReactNode;
+}[] = [
+  {
+    key: 'all',
+    label: 'All Courses',
+    shortLabel: 'All',
+    icon: <Layers className="h-4 w-4" />,
+  },
   {
     key: 'nsda',
     label: 'Government (NSDA)',
+    shortLabel: 'NSDA',
     icon: <Award className="h-4 w-4" />,
   },
   {
     key: 'skills',
     label: 'Skills Development Programs',
+    shortLabel: 'Skills',
     icon: <Briefcase className="h-4 w-4" />,
   },
 ];
@@ -171,8 +183,8 @@ const CoursesPage1 = () => {
         <div className="container mx-auto">
           {/* Filter Tabs */}
           <div className="flex items-center justify-center mb-8 md:mb-6">
-            <div className="w-full flex justify-center overflow-x-auto scrollbar-hide py-4 sm:py-5">
-              <div className="inline-flex bg-white rounded-lg sm:rounded-xl border-2 border-black p-1 gap-1.5 sm:gap-2 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+            <div className="w-full flex justify-center overflow-x-auto scrollbar-hide py-4 sm:py-5 -mx-1 px-1">
+              <div className="inline-flex bg-white rounded-lg sm:rounded-xl border-2 border-black p-0.5 sm:p-1 gap-1 sm:gap-2 shadow-[3px_3px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_rgba(0,0,0,1)]">
                 {filterTabs.map(tab => {
                   const isActive = activeTab === tab.key;
 
@@ -181,9 +193,9 @@ const CoursesPage1 = () => {
                       key={tab.key}
                       onClick={() => setActiveTab(tab.key)}
                       className={`
-              relative inline-flex items-center gap-2
-              px-3 sm:px-4 py-2.5 sm:py-2
-              text-xs sm:text-sm font-semibold
+              relative inline-flex items-center gap-1.5 sm:gap-2
+              px-3.5 sm:px-4 py-2 sm:py-2.5
+              text-[11px] sm:text-sm font-semibold
               rounded-md sm:rounded-lg
               whitespace-nowrap border-2
               transition-all duration-200
@@ -195,8 +207,9 @@ const CoursesPage1 = () => {
               }
             `}
                     >
-                      {tab.icon}
-                      {tab.label}
+                      <span className="hidden sm:inline-flex">{tab.icon}</span>
+                      <span className="sm:hidden">{tab.shortLabel}</span>
+                      <span className="hidden sm:inline">{tab.label}</span>
                     </button>
                   );
                 })}

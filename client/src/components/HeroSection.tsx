@@ -9,7 +9,7 @@ export default function HeroSection() {
 
   return (
     <section className="relative lg:min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50 overflow-hidden">
-      <div className="max-w-[1450px] mx-auto px-6 lg:px-16 pt-6 pb-20 max-sm:py-14 relative">
+      <div className="max-w-[1450px] mx-auto px-6 lg:px-16 pt-6 pb-20 max-sm:pb-10 max-sm:py-14 relative">
         {/* 65% Left / 35% Right Layout */}
         <div className="grid lg:grid-cols-[60%_40%] gap-5 items-center">
           {/* LEFT CONTENT */}
@@ -18,10 +18,10 @@ export default function HeroSection() {
           >
             <div className={`space-y-4 ${isBangla ? 'max-sm:space-y-4' : ''}`}>
               <h1
-                className={`text-7xl max-sm:text-7xl max-sm:font-bold lg:text-8xl font-black leading-[0.95] max-sm:leading-tight tracking-tight ${
+                className={`text-7xl max-sm:text-5xl max-sm:font-bold lg:text-8xl font-black leading-[0.95] max-sm:leading-[1.1] tracking-tight ${
                   isBangla
-                    ? 'font-bangla max-sm:leading-[1.15] max-sm:tracking-normal'
-                    : ' max-sm:leading-[0.95] max-sm:tracking-normal max-sm:text-7xl text- '
+                    ? 'font-bangla max-sm:leading-[1.2] max-sm:tracking-normal'
+                    : ' max-sm:leading-[1.0] max-sm:tracking-tighter'
                 }`}
               >
                 <span className="text-gray-900"> {t('home.hero.title')}</span>
