@@ -31,5 +31,8 @@
     "submitting": "Submitting...",
     "success": "Application submitted successfully!",
     "error": "Failed to submit application. Please try again."
+  },
+  "buttons": {
+    "sendMessage": "Send Message"
   }
 }
