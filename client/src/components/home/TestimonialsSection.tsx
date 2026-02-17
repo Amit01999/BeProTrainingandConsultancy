@@ -18,8 +18,8 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     id: 1,
-    name: 'Md. Rahim Uddin',
-    nameBn: 'মোঃ রহিম উদ্দিন',
+    name: 'Sabbir Hossain',
+    nameBn: 'সাব্বির হোসেন',
     roleKey: 'testimonials.roles.graphicDesigner',
     content:
       'The NSDA-approved training completely transformed my career. I now work as a professional graphic designer at a leading agency.',
@@ -29,8 +29,8 @@ const testimonials: Testimonial[] = [
   },
   {
     id: 2,
-    name: 'Fatema Begum',
-    nameBn: 'ফাতেমা বেগম',
+    name: 'Nusrat Jahan',
+    nameBn: 'নুসরাত জাহান',
     roleKey: 'testimonials.roles.digitalMarketer',
     content:
       "BePro's digital marketing course gave me practical skills that I use every day. The trainers are extremely knowledgeable and supportive.",
@@ -40,8 +40,8 @@ const testimonials: Testimonial[] = [
   },
   {
     id: 3,
-    name: 'Abdul Karim',
-    nameBn: 'আব্দুল করিম',
+    name: 'Mehedi Hasan',
+    nameBn: 'মেহেদী হাসান',
     roleKey: 'testimonials.roles.entrepreneur',
     content:
       'The entrepreneurship development program helped me start my own business. The soft skills training was invaluable.',
@@ -51,8 +51,8 @@ const testimonials: Testimonial[] = [
   },
   {
     id: 4,
-    name: 'Sharmin Akter',
-    nameBn: 'শারমিন আক্তার',
+    name: 'Tanjila Akter',
+    nameBn: 'তানজিলা আক্তার',
     roleKey: 'testimonials.roles.corporateTrainer',
     content:
       'After completing the SkillsBoost program, I became a certified soft skills trainer myself. This program changed my life.',
@@ -85,11 +85,20 @@ const TestimonialsSection = () => {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-gradient-to-r from-primary/20 via-secondary/20 to-[#FFBE06]/20 rounded-full blur-3xl" />
 
       <div className="container relative z-10 text-center mb-16">
-        <Badge variant="secondary" className={`mb-4 text-sm ${isBangla ? 'font-bangla' : ''}`}>
+        <Badge
+          variant="secondary"
+          className={`mb-4 text-sm ${isBangla ? 'font-bangla' : ''}`}
+        >
           {t('testimonials.badge')}
         </Badge>
-        <h2 className={`text-3xl md:text-5xl font-bold mb-4 ${isBangla ? 'font-bangla' : ''}`}>
-          {t('testimonials.title')} <span className="text-gradient">{t('testimonials.titleHighlight')}</span> {t('testimonials.titleEnd')}
+        <h2
+          className={`text-3xl md:text-5xl font-bold mb-4 ${isBangla ? 'font-bangla' : ''}`}
+        >
+          {t('testimonials.title')}{' '}
+          <span className="text-gradient">
+            {t('testimonials.titleHighlight')}
+          </span>{' '}
+          {t('testimonials.titleEnd')}
         </h2>
       </div>
 
@@ -115,19 +124,34 @@ const TestimonialsSection = () => {
               <Card className="p-8 md:p-10 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <CardContent className="p-0">
                   <Quote className="h-12 w-12 text-primary/30 mb-4" />
-                  <blockquote className={`text-lg mb-6 leading-relaxed ${isBangla ? 'font-bangla' : ''}`}>
-                    "{isBangla ? testimonials[current].contentBn : testimonials[current].content}"
+                  <blockquote
+                    className={`text-lg mb-6 leading-relaxed ${isBangla ? 'font-bangla' : ''}`}
+                  >
+                    "
+                    {isBangla
+                      ? testimonials[current].contentBn
+                      : testimonials[current].content}
+                    "
                   </blockquote>
                   <div className="flex items-center justify-between pt-4 border-t border-border/50">
                     <div>
-                      <div className={`font-semibold text-lg ${isBangla ? 'font-bangla' : ''}`}>
-                        {isBangla ? testimonials[current].nameBn : testimonials[current].name}
+                      <div
+                        className={`font-semibold text-lg ${isBangla ? 'font-bangla' : ''}`}
+                      >
+                        {isBangla
+                          ? testimonials[current].nameBn
+                          : testimonials[current].name}
                       </div>
-                      <div className={`text-sm text-primary mt-1.5 font-medium ${isBangla ? 'font-bangla' : ''}`}>
-                        {t(testimonials[current].roleKey)} • {testimonials[current].course}
+                      <div
+                        className={`text-sm text-primary mt-1.5 font-medium ${isBangla ? 'font-bangla' : ''}`}
+                      >
+                        {t(testimonials[current].roleKey)} •{' '}
+                        {testimonials[current].course}
                       </div>
                     </div>
-                    <Badge className={`text-sm px-4 py-1.5 ${isBangla ? 'font-bangla' : ''}`}>
+                    <Badge
+                      className={`text-sm px-4 py-1.5 ${isBangla ? 'font-bangla' : ''}`}
+                    >
                       {testimonials[current].course}
                     </Badge>
                   </div>

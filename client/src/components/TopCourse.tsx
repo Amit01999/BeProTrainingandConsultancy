@@ -40,12 +40,12 @@ export default function TopCourse() {
   ];
 
   return (
-    <section className="relative py-24 bg-background px-6 lg:px-20">
-      <div className="absolute top-12 right-12 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-12 left-12 w-96 h-96 bg-primary/3 rounded-full blur-3xl" />
+    <section className="relative py-12 sm:py-24 bg-background px-4 sm:px-6 lg:px-20">
+      <div className="absolute top-12 right-12 w-72 h-72 bg-primary/5 rounded-full blur-3xl hidden sm:block" />
+      <div className="absolute bottom-12 left-12 w-96 h-96 bg-primary/3 rounded-full blur-3xl hidden sm:block" />
 
       <div className="relative container mx-auto max-w-7xl">
-        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-10 items-start">
           {/* Left Content */}
           <div>
             <div className="inline-block mb-8">
@@ -54,18 +54,18 @@ export default function TopCourse() {
               </span>
             </div>
 
-            <h2 className={`text-5xl md:text-6xl font-bold mb-6 leading-[1.1] tracking-tight ${isBangla ? 'font-bangla' : ''}`}>
+            <h2 className={`text-3xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 leading-[1.1] tracking-tight ${isBangla ? 'font-bangla' : ''}`}>
               {t('services.title')} <span className="text-primary">{t('services.titleHighlight')}</span>
               <br />
               <span className="text-foreground/60">{t('services.titleEnd')}</span>
             </h2>
 
-            <p className={`text-lg text-foreground/60 mb-12 max-w-lg leading-relaxed ${isBangla ? 'font-bangla' : ''}`}>
+            <p className={`text-base sm:text-lg text-foreground/60 mb-8 sm:mb-12 max-w-lg leading-relaxed ${isBangla ? 'font-bangla' : ''}`}>
               {t('services.description')}
             </p>
 
             {/* Service Pills */}
-            <div className="space-y-3 mb-14">
+            <div className="space-y-3 mb-8 sm:mb-14">
               {[
                 'services.pills.corporateTraining',
                 'services.pills.foreignJob',
@@ -82,7 +82,7 @@ export default function TopCourse() {
               ))}
             </div>
 
-            <div className="flex gap-5">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
               <Link href="/services">
                 <Button
                   size="lg"
@@ -105,20 +105,20 @@ export default function TopCourse() {
           </div>
 
           {/* Right Cards - Bento Grid Style */}
-          <div className="relative grid grid-cols-2 gap-x-10 ">
+          <div className="relative grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-x-10">
             {services.map((item, i) => {
               const Icon = item.icon;
               const isActive = activeIndex === i;
 
               // tighter editorial offsets
-              const offsets = ['mt-0', 'mt-10', 'mt-4', 'mt-12'];
+              const offsets = ['sm:mt-0', 'sm:mt-10', 'sm:mt-4', 'sm:mt-12'];
 
               return (
                 <div
                   key={i}
                   onMouseEnter={() => setActiveIndex(i)}
                   onMouseLeave={() => setActiveIndex(null)}
-                  className={`group relative transition-all duration-300 ${offsets[i]}`}
+                  className={`group relative transition-all duration-300 mt-0 ${offsets[i]}`}
                 >
                   {/* Ambient Accent */}
                   <div

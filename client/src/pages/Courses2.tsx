@@ -39,7 +39,6 @@ const CoursesPage = () => {
           level: course.level,
         });
       });
-      console.log('=========================');
     }
   }, [allCourses]);
 
@@ -64,7 +63,6 @@ const CoursesPage = () => {
       filtered.forEach(course => {
         console.log('- ', course.title, '(Category:', course.category, ')');
       });
-      console.log('================================');
       return filtered;
     }
 
@@ -95,7 +93,6 @@ const CoursesPage = () => {
       filtered.forEach(course => {
         console.log('- ', course.title, '(Category:', course.category, ')');
       });
-      console.log('==========================');
       return filtered;
     }
 
@@ -209,7 +206,9 @@ const CoursesPage = () => {
         animate-slide-up-delay max-w-3xl mx-auto 
         drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"
             >
-              এনএসডিএ অনুমোদিত সরকারি কোর্স এবং স্কিলসবুস্ট প্রোগ্রাম
+              Government-certified (NSDA-approved) courses and skill development
+              programs
+              {/* এনএসডিএ অনুমোদিত সরকারি কোর্স এবং স্কিলসবুস্ট প্রোগ্রাম */}
             </p>
 
             {/* Stats */}
@@ -295,13 +294,13 @@ const CoursesPage = () => {
               <button
                 className={`relative px-4 py-2 text-sm font-medium rounded-3xl transition-all duration-200 whitespace-nowrap flex items-center ${
                   activeTab === 'skillsboost'
-                    ? 'bg-primary text-white shadow-lg ml-[-4px] rounded-l-none'
+                    ? 'bg-primary text-white shadow-lg ml-[-4px] '
                     : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
                 }`}
                 onClick={() => handleTabChange('skillsboost')}
               >
                 <TrendingUp className="h-4 w-4 mr-2" />
-                SkillsBoost Course
+                Skills Development Programs
               </button>
             </div>
           </div>
@@ -373,23 +372,6 @@ const CoursesPage = () => {
           {/* Courses Grid */}
           {!isLoading && !error && filteredCourses.length > 0 && (
             <div className="space-y-10">
-              {/* Section Header */}
-              {/* <div className="text-center md:text-left space-y-3">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
-                  {activeTab === 'all' && 'All Available Courses'}
-                  {activeTab === 'government' && 'NSDA Approved Courses'}
-                  {activeTab === 'skillsboost' && 'SkillsBoost Programs'}
-                </h2>
-                <p className="text-lg md:text-xl text-gray-600 max-w-3xl">
-                  {activeTab === 'all' &&
-                    `Discover ${filteredCourses.length} professional courses across all categories`}
-                  {activeTab === 'government' &&
-                    `${filteredCourses.length} government-certified skill development programs with job placement support`}
-                  {activeTab === 'skillsboost' &&
-                    `${filteredCourses.length} soft skills training programs for professional excellence and career growth`}
-                </p>
-              </div> */}
-
               {/* Course Cards Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 {filteredCourses.map(course => (
@@ -421,8 +403,10 @@ const CoursesPage = () => {
               Ready to Upgrade Your Skills?
             </h2>
             <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed font-bangla max-w-2xl mx-auto">
-              আপনার জন্য সঠিক কোর্স বেছে নিতে আমাদের সাথে যোগাযোগ করুন। আমরা
-              আপনার ক্যারিয়ার লক্ষ্য অর্জনে সহায়তা করতে প্রস্তুত।
+              {/* আপনার জন্য সঠিক কোর্স বেছে নিতে আমাদের সাথে যোগাযোগ করুন। আমরা
+              আপনার ক্যারিয়ার লক্ষ্য অর্জনে সহায়তা করতে প্রস্তুত। */}
+              Get in touch with us to find the right course for you. We are
+              committed to helping you achieve your career goals.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Button
@@ -524,7 +508,7 @@ const CourseCard = ({ course }: { course: Course }) => {
         <div className="flex items-center justify-between gap-3">
           <Badge
             className={`${getBadgeStyles(
-              course.category
+              course.category,
             )} border text-xs font-semibold px-2.5 py-1`}
           >
             {course.category}

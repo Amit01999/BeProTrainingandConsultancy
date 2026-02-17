@@ -7,12 +7,12 @@ export function Footer() {
   const isBangla = i18n.language === 'bn';
 
   return (
-    <footer className="bg-foreground text-white border-t border-white/15">
-      <div className="container mx-auto px-4 lg:px-12 py-16">
+    <footer className="bg-foreground text-white border-t border-white/15 px-16">
+      <div className="container mx-auto px-4 lg:px-12 py-8">
         {/* Header Block */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-20 mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-20 mb-10">
           {/* Brand Section */}
-          <div className="space-y-4 lg:col-span-2">
+          <div className="space-y-5 lg:col-span-2">
             <p
               className={`text-[11px] uppercase tracking-[0.18em] text-white/45 
               ${isBangla ? 'font-bangla' : ''}`}
@@ -21,7 +21,7 @@ export function Footer() {
             </p>
 
             <h2
-              className={`text-4xl md:text-5xl font-semibold leading-snug 
+              className={`text-4xl md:text-4xl text-white/55 font-semibold leading-snug 
               ${isBangla ? 'font-bangla' : ''}`}
             >
               {t('footer.tagline')}
@@ -58,7 +58,7 @@ export function Footer() {
         </div>
 
         {/* Newsletter Signup Line */}
-        <div className="mb-20 p-8 border border-white/10 rounded-xl">
+        <div className="mb-14 p-8 border border-white/10 rounded-xl">
           <div className="flex flex-col lg:flex-row lg:items-center gap-7">
             {/* Text */}
             <div className="flex-1 space-y-2">

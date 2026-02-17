@@ -12,6 +12,7 @@ import FinalCTA from '@/components/FinalCTA';
 import SkillsBoostPreview from '@/components/SkillsBoostPreview';
 import UCEPPreview from '@/components/home/UCEPPreview';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
+import FeaturedCourses1 from '@/components/FeaturedCourses1';
 
 export default function Home() {
   return (
@@ -19,7 +20,7 @@ export default function Home() {
       {/* HeroSection */}
       <HeroSection />
       {/* Featured Courses Carousel Section */}
-      <FeaturedCourses />
+      <FeaturedCourses1 />
       {/* Upgrade Skills Section */}
       <SkillsBoostPreview />
       {/* Upgrade Skills Section */}

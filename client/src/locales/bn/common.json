@@ -1,15 +1,16 @@
 {
   "nav": {
     "home": "হোম",
-    "courses": "কোর্স",
-    "skillsBoost": "স্কিলস বুস্ট",
+    "courses": "সমস্ত কোর্স",
+    "skillsBoost": "দক্ষতা উন্নয়ন",
     "services": "সেবাসমূহ",
     "contact": "যোগাযোগ",
     "login": "লগইন",
     "register": "নিবন্ধন করুন",
     "logout": "লগআউট",
     "dashboard": "ড্যাশবোর্ড",
-    "admin": "অ্যাডমিন"
+    "admin": "অ্যাডমিন",
+    "bootcamp": "WE বুটক্যাম্প"
   },
   "footer": {
     "tagline": "সার্টিফিকেটের জন্য শেখা বন্ধ করুন।",

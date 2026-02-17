@@ -1,15 +1,16 @@
 {
   "nav": {
     "home": "Home",
-    "courses": "Courses",
-    "skillsBoost": "SkillsBoost",
+    "courses": "All Course",
+    "skillsBoost": "Skills Development",
     "services": "Services",
     "contact": "Contact",
     "login": "Login",
     "register": "Sign up",
     "logout": "Logout",
     "dashboard": "Dashboard",
-    "admin": "Admin"
+    "admin": "Admin",
+    "bootcamp": "WE Bootcamp"
   },
   "footer": {
     "tagline": "Stop learning for certificates.",

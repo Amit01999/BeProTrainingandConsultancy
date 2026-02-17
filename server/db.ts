@@ -1,66 +1,41 @@
-import mongoose from 'mongoose';
+import mongoose, { Mongoose } from 'mongoose';
 
-// Provide a connect function and lazy connect during app startup
 mongoose.set('strictQuery', true);
 
-// Cache the connection for serverless
-let cached = global.mongoose;
+/**
+ * connectDB - Establishes a Mongoose connection using environment configuration.
+ * Exits the process if connection fails (suitable for server startup behavior).
+ */
+export async function connectDB(): Promise<Mongoose> {
+  const mongoUrl = process.env.MONGO_URL;
+  const dbName = process.env.MONGO_DB_NAME || 'BeProTrainingandConsultancy';
 
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
-
-export async function connectMongo() {
-  // Check if MONGO_URL is set
-  if (!process.env.MONGO_URL) {
+  if (!mongoUrl) {
     console.error('MONGO_URL environment variable is not set!');
-    throw new Error(
-      'MONGO_URL must be set. Did you forget to provision a MongoDB database?'
+    console.error(
+      'Set MONGO_URL in your .env or environment before starting the server.',
     );
+    process.exit(1);
   }
 
-  // Return cached connection if exists (important for serverless)
-  if (cached.conn) {
-    console.log('Using cached MongoDB connection');
-    return cached.conn;
-  }
-
-  // Create new connection if not cached
-  if (!cached.promise) {
-    console.log('Creating new MongoDB connection...');
-    const opts = {
-      dbName: process.env.MONGO_DB_NAME,
-      bufferCommands: false, // Disable buffering in serverless
-    };
-
-    cached.promise = mongoose.connect(process.env.MONGO_URL as string, opts)
-      .then((mongoose) => {
-        console.log('MongoDB connected successfully');
-        return mongoose;
-      })
-      .catch((error) => {
-        console.error('MongoDB connection error:', error);
-        throw error;
-      });
-  }
+  const opts = {
+    dbName,
+    bufferCommands: false,
+    serverSelectionTimeoutMS: 30000,
+    connectTimeoutMS: 30000,
+    family: 4 as const,
+  };
 
   try {
-    cached.conn = await cached.promise;
-  } catch (e) {
-    cached.promise = null;
-    throw e;
+    console.log('Attempting MongoDB connection...');
+    const conn = await mongoose.connect(mongoUrl, opts);
+    console.log(`MongoDB connected successfully to database "${dbName}"`);
+    return conn;
+  } catch (err) {
+    console.error('Failed to connect to MongoDB:', err);
+    // fail fast - useful for containers/PM2 to restart with correct env
+    process.exit(1);
   }
-
-  return cached.conn;
 }
 
-// Add global type declaration
-declare global {
-  var mongoose: {
-    conn: typeof mongoose | null;
-    promise: Promise<typeof mongoose> | null;
-  };
-}
-
-export const mongo = mongoose;
-export default mongo;
+export default mongoose;

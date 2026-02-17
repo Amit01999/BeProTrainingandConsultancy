@@ -17,18 +17,16 @@ import { coursesData, type Course } from '@/data/coursesData';
 
 type FilterTab = 'all' | 'nsda' | 'skills';
 
-const filterTabs: { key: FilterTab; label: string; shortLabel: string; icon: React.ReactNode }[] = [
-  { key: 'all', label: 'All Courses', shortLabel: 'All', icon: <Layers className="h-4 w-4" /> },
+const filterTabs: { key: FilterTab; label: string; icon: React.ReactNode }[] = [
+  { key: 'all', label: 'All Courses', icon: <Layers className="h-4 w-4" /> },
   {
     key: 'nsda',
     label: 'Government (NSDA)',
-    shortLabel: 'NSDA',
     icon: <Award className="h-4 w-4" />,
   },
   {
     key: 'skills',
     label: 'Skills Development Programs',
-    shortLabel: 'Skills',
     icon: <Briefcase className="h-4 w-4" />,
   },
 ];
@@ -37,7 +35,7 @@ const filterTabs: { key: FilterTab; label: string; shortLabel: string; icon: Rea
    MAIN PAGE
    ──────────────────────────────────────────────── */
 
-const FeaturedCourses1 = () => {
+const CoursesPage1 = () => {
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
 
   const filtered: Course[] =
@@ -47,12 +45,134 @@ const FeaturedCourses1 = () => {
 
   return (
     <div className="min-h-screen bg-[rgb(var(--whitebackground))]">
+      <Helmet>
+        <title>Courses | BePro Training & Consultancy</title>
+        <meta
+          name="description"
+          content="Explore NSDA-approved government courses and private training programs. Graphic Design, Digital Marketing, Entrepreneurship, and more."
+        />
+      </Helmet>
+
+      {/* ──────── HERO ──────── */}
+      {/* Enhanced Hero Section */}
+
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-primary/90">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')", // Replace with your image
+          }}
+        />
+
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+
+        {/* Grid Pattern */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '50px 50px',
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative z-10 container mx-auto px-6 lg:px-16 py-20 md:py-28">
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Badge */}
+            <div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full 
+        bg-white/20 backdrop-blur-sm border border-white/40 
+        text-white font-medium mb-6 animate-fade-in"
+            >
+              <GraduationCap className="h-4 w-4" />
+              <span className="text-sm font-semibold">
+                Professional Skill Development
+              </span>
+            </div>
+
+            {/* Main Heading */}
+            <h1
+              className="text-5xl md:text-7xl lg:text-8xl font-extrabold 
+        mb-6 text-white drop-shadow-[0_3px_6px_rgba(0,0,0,0.45)] 
+        tracking-tight animate-slide-up"
+            >
+              COURSES
+            </h1>
+
+            {/* Subtitle */}
+            <p
+              className="text-xl md:text-2xl lg:text-3xl 
+        text-white/90 font-bangla leading-relaxed mb-8 
+        animate-slide-up-delay max-w-3xl mx-auto 
+        drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"
+            >
+              Government-certified (NSDA-approved) courses and skill development
+              programs
+              {/* এনএসডিএ অনুমোদিত সরকারি কোর্স এবং স্কিলসবুস্ট প্রোগ্রাম */}
+            </p>
+
+            {/* Stats */}
+            <div className="flex flex-wrap justify-center gap-6 md:gap-12 text-white">
+              {/* Courses Count */}
+              <div className="text-center animate-fade-in-delay">
+                <div className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_3px_6px_rgba(0,0,0,0.4)]">
+                  {coursesData.length}+
+                </div>
+                <div className="text-sm md:text-base text-white/85 mt-1">
+                  Courses
+                </div>
+              </div>
+
+              {/* Students */}
+              <div className="text-center animate-fade-in-delay-2">
+                <div className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_3px_6px_rgba(0,0,0,0.4)]">
+                  500+
+                </div>
+                <div className="text-sm md:text-base text-white/85 mt-1">
+                  Students
+                </div>
+              </div>
+
+              {/* Success Rate */}
+              <div className="text-center animate-fade-in-delay-3">
+                <div className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_3px_6px_rgba(0,0,0,0.4)]">
+                  95%
+                </div>
+                <div className="text-sm md:text-base text-white/85 mt-1">
+                  Success Rate
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Wave */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg
+            className="w-full h-auto"
+            viewBox="0 0 1440 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 50L60 45C120 40 240 30 360 25C480 20 600 20 720 25C840 30 960 40 1080 45C1200 50 1320 50 1380 50L1440 50V100H1380C1320 100 1200 100 1080 100C960 100 840 100 720 100C600 100 480 100 360 100C240 100 120 100 60 100H0V50Z"
+              fill="#f9fafb"
+            />
+          </svg>
+        </div>
+      </section>
+
       {/* ──────── FILTER TABS + CARDS ──────── */}
-      <section className="py-10 sm:py-16 md:py-2 px-3 sm:px-6 lg:px-20 backdrop-blur-lg w-full">
-        <div className="container mx-auto max-w-screen-2xl">
+      <section className="py-14 md:py-2 px-6 lg:px-16">
+        <div className="container mx-auto">
+          {/* Filter Tabs */}
           <div className="flex items-center justify-center mb-8 md:mb-6">
-            <div className="w-full flex justify-center overflow-x-auto scrollbar-hide py-4 sm:py-5 -mx-1 px-1">
-              <div className="inline-flex bg-white rounded-lg sm:rounded-xl border-2 border-black p-0.5 sm:p-1 gap-1 sm:gap-2 shadow-[3px_3px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+            <div className="w-full flex justify-center overflow-x-auto scrollbar-hide py-4 sm:py-5">
+              <div className="inline-flex bg-white rounded-lg sm:rounded-xl border-2 border-black p-1 gap-1.5 sm:gap-2 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
                 {filterTabs.map(tab => {
                   const isActive = activeTab === tab.key;
 
@@ -61,9 +181,9 @@ const FeaturedCourses1 = () => {
                       key={tab.key}
                       onClick={() => setActiveTab(tab.key)}
                       className={`
-              relative inline-flex items-center gap-1.5 sm:gap-2
-              px-3 sm:px-4 py-2 sm:py-2.5
-              text-[10px] sm:text-sm font-semibold
+              relative inline-flex items-center gap-2
+              px-3 sm:px-4 py-2.5 sm:py-2
+              text-xs sm:text-sm font-semibold
               rounded-md sm:rounded-lg
               whitespace-nowrap border-2
               transition-all duration-200
@@ -75,7 +195,7 @@ const FeaturedCourses1 = () => {
               }
             `}
                     >
-                      <span className="hidden sm:inline-flex">{tab.icon}</span>
+                      {tab.icon}
                       {tab.label}
                     </button>
                   );
@@ -85,11 +205,39 @@ const FeaturedCourses1 = () => {
           </div>
 
           {/* Course Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8 mb-10 sm:mb-16">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
             {filtered.map((course, index) => (
               <CourseCard key={course.id} course={course} index={index} />
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="relative mt-16 py-20 md:py-28 bg-gradient-to-br from-primary/10 via-indigo-50 to-rose-50 overflow-hidden">
+        {/* Decorative gradient blobs */}
+        <div className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-primary/30 to-indigo-400/30 rounded-full blur-3xl opacity-40" />
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-gradient-to-br from-rose-400/30 to-primary/30 rounded-full blur-3xl opacity-40" />
+
+        <div className="relative container mx-auto text-center px-6">
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-gray-900 tracking-tight">
+            Need Help Choosing the Right Course?
+          </h2>
+
+          <p className="text-gray-700 mb-10 max-w-xl mx-auto leading-relaxed text-base md:text-lg">
+            Our team can help you find the perfect course to match your goals
+            and career aspirations.
+          </p>
+
+          <Button
+            asChild
+            size="lg"
+            className="group bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/40 px-10 h-14 text-base md:text-lg rounded-full transition-all duration-300 hover:scale-105"
+          >
+            <Link to="/contact" className="flex items-center gap-2">
+              Contact Us
+              <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </Button>
         </div>
       </section>
     </div>
@@ -125,7 +273,7 @@ const CourseCard = ({ course, index }: CourseCardProps) => {
         className="
           relative h-full flex flex-col bg-white
           rounded-2xl overflow-hidden
-          border border-slate-400
+         border border-slate-400
           shadow-[0_2px_20px_rgba(0,0,0,0.06)]
           hover:border-orange-400
           hover:shadow-[0_8px_40px_rgba(0,0,0,0.12)]
@@ -236,4 +384,4 @@ const CourseCard = ({ course, index }: CourseCardProps) => {
   );
 };
 
-export default FeaturedCourses1;
+export default CoursesPage1;

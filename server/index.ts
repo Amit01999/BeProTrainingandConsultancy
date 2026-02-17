@@ -1,4 +1,5 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+dotenv.config();
 import express, { type Request, Response, NextFunction } from 'express';
 import { registerRoutes } from './routes';
 import { serveStatic } from './static';
@@ -18,7 +19,7 @@ app.use(
     verify: (req, _res, buf) => {
       req.rawBody = buf;
     },
-  })
+  }),
 );
 
 app.use(express.urlencoded({ extended: false }));
@@ -61,8 +62,8 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  const { connectMongo } = await import('./db');
-  await connectMongo();
+  const { connectDB } = await import('./db');
+  await connectDB();
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

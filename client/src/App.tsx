@@ -6,6 +6,7 @@ import { AuthProvider } from '@/hooks/use-auth';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { HelmetProvider } from 'react-helmet-async';
+import EventPopupModal from '@/components/EventPopupModal';
 
 // Pages
 import Home from '@/pages/Home';
@@ -19,7 +20,12 @@ import AdminDashboard from '@/pages/Admin';
 import NotFound from '@/pages/not-found';
 import SkillsBoostPage from './pages/SkillsBoostPage';
 import CorporateServicesPage from './pages/CorporateServicesPage';
+// import Courses2 from './pages/Courses2';
+import CoursesPage from './pages/Courses';
+import CoursesPage1 from './pages/CoursesPage1';
+import CourseDetail1 from './pages/CourseDetail1';
 import Courses2 from './pages/Courses2';
+import BootcampPage from './pages/BootcampPage';
 
 function Router() {
   return (
@@ -28,13 +34,16 @@ function Router() {
       <main className="flex-grow w-full overflow-x-hidden">
         <Switch>
           <Route path="/" component={Home} />
-          {/* <Route path="/courses" component={Courses} /> */}
-          <Route path="/courses" component={Courses2} />
+          <Route path="/courses" component={CoursesPage1} />
+          {/* <Route path="/courses-page" component={CoursesPage} /> */}
+          <Route path="/courses-page" component={Courses2} />
+          <Route path="/courses1/:id" component={CourseDetail1} />
           <Route path="/courses/:id" component={CourseDetails} />
           <Route path="/skills" component={SkillsBoost} />
           <Route path="/services" component={CorporateServicesPage} />
           <Route path="/skillsboost" component={SkillsBoostPage} />
           <Route path="/contact" component={Contact} />
+          <Route path="/bootcamp" component={BootcampPage} />
           <Route path="/login" component={AuthPage} />
           <Route path="/register" component={AuthPage} />
           <Route path="/dashboard" component={Dashboard} />
@@ -54,6 +63,7 @@ function App() {
         <AuthProvider>
           <Router />
           <Toaster />
+          <EventPopupModal />
         </AuthProvider>
       </QueryClientProvider>
     </HelmetProvider>
