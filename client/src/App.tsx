@@ -63,7 +63,7 @@ function App() {
         <AuthProvider>
           <Router />
           <Toaster />
-          <EventPopupModal />
+          {/* <EventPopupModal /> */}
         </AuthProvider>
       </QueryClientProvider>
     </HelmetProvider>

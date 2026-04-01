@@ -28,7 +28,7 @@ export default function Home() {
       {/* Explore Top Courses */}
       <TopCourse />
       {/* UCEPPreview  Section */}
-      <UCEPPreview />
+      {/* <UCEPPreview /> */}
       {/* Final CTA Section */}
       <FinalCTA />
       {/* Testimonials Section */}
