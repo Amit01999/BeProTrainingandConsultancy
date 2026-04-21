@@ -72,7 +72,6 @@ export function Navbar() {
     { href: '/skills', label: t('nav.skillsBoost') },
     { href: '/services', label: t('nav.services') },
     { href: '/contact', label: t('nav.contact') },
-    { href: '/bootcamp', label: t('nav.bootcamp'), special: true },
   ];
 
   const handleLogout = () => {

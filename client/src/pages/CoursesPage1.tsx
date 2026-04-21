@@ -5,6 +5,7 @@ import {
   Clock,
   Award,
   Briefcase,
+  Languages,
   ArrowRight,
   BookOpen,
   Layers,
@@ -15,7 +16,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'wouter';
 import { coursesData, type Course } from '@/data/coursesData';
 
-type FilterTab = 'all' | 'nsda' | 'skills';
+type FilterTab = 'all' | 'nsda' | 'skills' | 'language';
 
 const filterTabs: {
   key: FilterTab;
@@ -41,11 +42,13 @@ const filterTabs: {
     shortLabel: 'Skills',
     icon: <Briefcase className="h-4 w-4" />,
   },
+  {
+    key: 'language',
+    label: 'Language Training',
+    shortLabel: 'Language',
+    icon: <Languages className="h-4 w-4" />,
+  },
 ];
-
-/* ────────────────────────────────────────────────
-   MAIN PAGE
-   ──────────────────────────────────────────────── */
 
 const CoursesPage1 = () => {
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
@@ -65,23 +68,17 @@ const CoursesPage1 = () => {
         />
       </Helmet>
 
-      {/* ──────── HERO ──────── */}
-      {/* Enhanced Hero Section */}
-
       <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-primary/90">
-        {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')", // Replace with your image
+              "url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
           }}
         />
 
-        {/* Dark Overlay */}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
 
-        {/* Grid Pattern */}
         <div
           className="absolute inset-0 opacity-10"
           style={{
@@ -91,10 +88,8 @@ const CoursesPage1 = () => {
           }}
         />
 
-        {/* Content */}
         <div className="relative z-10 container mx-auto px-6 lg:px-16 py-20 md:py-28">
           <div className="max-w-4xl mx-auto text-center">
-            {/* Badge */}
             <div
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full 
         bg-white/20 backdrop-blur-sm border border-white/40 
@@ -106,7 +101,6 @@ const CoursesPage1 = () => {
               </span>
             </div>
 
-            {/* Main Heading */}
             <h1
               className="text-5xl md:text-7xl lg:text-8xl font-extrabold 
         mb-6 text-white drop-shadow-[0_3px_6px_rgba(0,0,0,0.45)] 
@@ -115,7 +109,6 @@ const CoursesPage1 = () => {
               COURSES
             </h1>
 
-            {/* Subtitle */}
             <p
               className="text-xl md:text-2xl lg:text-3xl 
         text-white/90 font-bangla leading-relaxed mb-8 
@@ -124,12 +117,9 @@ const CoursesPage1 = () => {
             >
               Government-certified (NSDA-approved) courses and skill development
               programs
-              {/* এনএসডিএ অনুমোদিত সরকারি কোর্স এবং স্কিলসবুস্ট প্রোগ্রাম */}
             </p>
 
-            {/* Stats */}
             <div className="flex flex-wrap justify-center gap-6 md:gap-12 text-white">
-              {/* Courses Count */}
               <div className="text-center animate-fade-in-delay">
                 <div className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_3px_6px_rgba(0,0,0,0.4)]">
                   {coursesData.length}+
@@ -139,7 +129,6 @@ const CoursesPage1 = () => {
                 </div>
               </div>
 
-              {/* Students */}
               <div className="text-center animate-fade-in-delay-2">
                 <div className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_3px_6px_rgba(0,0,0,0.4)]">
                   500+
@@ -149,7 +138,6 @@ const CoursesPage1 = () => {
                 </div>
               </div>
 
-              {/* Success Rate */}
               <div className="text-center animate-fade-in-delay-3">
                 <div className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_3px_6px_rgba(0,0,0,0.4)]">
                   95%
@@ -162,7 +150,6 @@ const CoursesPage1 = () => {
           </div>
         </div>
 
-        {/* Bottom Wave */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg
             className="w-full h-auto"
@@ -178,10 +165,8 @@ const CoursesPage1 = () => {
         </div>
       </section>
 
-      {/* ──────── FILTER TABS + CARDS ──────── */}
       <section className="py-14 md:py-2 px-6 lg:px-16">
         <div className="container mx-auto">
-          {/* Filter Tabs */}
           <div className="flex items-center justify-center mb-8 md:mb-6">
             <div className="w-full flex justify-center overflow-x-auto scrollbar-hide py-4 sm:py-5 -mx-1 px-1">
               <div className="inline-flex bg-white rounded-lg sm:rounded-xl border-2 border-black p-0.5 sm:p-1 gap-1 sm:gap-2 shadow-[3px_3px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_rgba(0,0,0,1)]">
@@ -217,7 +202,6 @@ const CoursesPage1 = () => {
             </div>
           </div>
 
-          {/* Course Grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
             {filtered.map((course, index) => (
               <CourseCard key={course.id} course={course} index={index} />
@@ -227,7 +211,6 @@ const CoursesPage1 = () => {
       </section>
 
       <section className="relative mt-16 py-20 md:py-28 bg-gradient-to-br from-primary/10 via-indigo-50 to-rose-50 overflow-hidden">
-        {/* Decorative gradient blobs */}
         <div className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-primary/30 to-indigo-400/30 rounded-full blur-3xl opacity-40" />
         <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-gradient-to-br from-rose-400/30 to-primary/30 rounded-full blur-3xl opacity-40" />
 
@@ -257,10 +240,6 @@ const CoursesPage1 = () => {
   );
 };
 
-/* ────────────────────────────────────────────────
-   COURSE CARD
-   ──────────────────────────────────────────────── */
-
 interface CourseCardProps {
   course: Course;
   index: number;
@@ -268,7 +247,8 @@ interface CourseCardProps {
 
 const CourseCard = ({ course, index }: CourseCardProps) => {
   const isFree = course.discountedPrice === 0;
-  const discount = !isFree
+  const hasDiscount = !isFree && course.originalPrice > course.discountedPrice;
+  const discount = hasDiscount
     ? Math.round(
         ((course.originalPrice - course.discountedPrice) /
           course.originalPrice) *
@@ -294,78 +274,66 @@ const CourseCard = ({ course, index }: CourseCardProps) => {
           transition-all duration-300 ease-out
         "
       >
-        {/* ── IMAGE BANNER ── */}
         <div className="relative h-48 overflow-hidden">
           <img
             src={course.img}
             alt={course.title}
-            className="absolute inset-0 w-full h-full object-cover
-                       group-hover:scale-105 transition-transform duration-700 ease-out"
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
 
-          {/* gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
 
-          {/* Badge — top left flush corner ribbon */}
           <div className="absolute top-0 left-0">
             {isFree ? (
-              <span
-                className="flex items-center gap-1 pl-3 pr-4 py-1.5
-                               bg-green-500 text-white text-[10px] font-black
-                               uppercase tracking-[0.1em] rounded-br-2xl
-                               shadow-[0_2px_10px_rgba(22,163,74,0.45)]"
-              >
+              <span className="flex items-center gap-1 pl-3 pr-4 py-1.5 bg-green-500 text-white text-[10px] font-black uppercase tracking-[0.1em] rounded-br-2xl shadow-[0_2px_10px_rgba(22,163,74,0.45)]">
                 <Tag className="h-2.5 w-2.5" />
                 Free
               </span>
-            ) : (
-              <span
-                className="flex items-center gap-1 pl-3 pr-4 py-1.5
-                               bg-orange-500 text-white text-[10px] font-black
-                               uppercase tracking-[0.1em] rounded-br-2xl
-                               shadow-[0_2px_10px_rgba(249,115,22,0.45)]"
-              >
+            ) : hasDiscount ? (
+              <span className="flex items-center gap-1 pl-3 pr-4 py-1.5 bg-orange-500 text-white text-[10px] font-black uppercase tracking-[0.1em] rounded-br-2xl shadow-[0_2px_10px_rgba(249,115,22,0.45)]">
                 <Tag className="h-2.5 w-2.5" />
                 {discount}% OFF
               </span>
-            )}
+            ) : null}
           </div>
 
-          {/* Category — top right flush corner */}
           <div className="absolute top-0 right-0">
-            <span
-              className="flex items-center gap-1.5 pr-3 pl-4 py-1.5
-                             text-[10px] font-black uppercase tracking-[0.1em]
-                             bg-black/50 backdrop-blur-sm text-white
-                             rounded-bl-2xl border-b border-l border-white/10"
-            >
+            <span className="flex items-center gap-1.5 pr-3 pl-4 py-1.5 text-[10px] font-black uppercase tracking-[0.1em] bg-black/50 backdrop-blur-sm text-white rounded-bl-2xl border-b border-l border-white/10">
               {course.category === 'nsda' ? (
                 <Award className="h-3 w-3 text-amber-300" />
+              ) : course.category === 'language' ? (
+                <Languages className="h-3 w-3 text-cyan-300" />
               ) : (
                 <Briefcase className="h-3 w-3 text-sky-300" />
               )}
-              {course.category === 'nsda' ? 'NSDA' : 'Skills'}
+              {course.category === 'nsda'
+                ? 'NSDA'
+                : course.category === 'language'
+                  ? 'Language'
+                  : 'Skills'}
             </span>
           </div>
+
+          {course.programTags?.length ? (
+            <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5 z-10">
+              {course.programTags.map(tag => (
+                <span
+                  key={tag}
+                  className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.08em] bg-white/90 text-slate-900 border border-white/70 backdrop-blur-sm shadow-sm"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          ) : null}
         </div>
 
-        {/* ── CARD BODY ── */}
         <div className="flex flex-col flex-1 px-4 pt-3.5 pb-4">
-          {/* Title only */}
-          <h3
-            className="text-[14.5px] font-bold text-gray-900 line-clamp-2
-                         leading-snug group-hover:text-primary
-                         transition-colors duration-200 flex-1"
-          >
+          <h3 className="text-[14.5px] font-bold text-gray-900 line-clamp-2 leading-snug group-hover:text-primary transition-colors duration-200 flex-1">
             {course.title}
           </h3>
 
-          {/* ── BOTTOM ROW: Price + Button ── */}
-          <div
-            className="flex items-center justify-between gap-3 mt-4
-                          pt-3.5 border-t-2 border-dashed border-gray-100"
-          >
-            {/* Price */}
+          <div className="flex items-center justify-between gap-3 mt-4 pt-3.5 border-t-2 border-dashed border-gray-100">
             <div>
               {isFree ? (
                 <span className="text-xl font-black text-green-500 leading-none">
@@ -374,16 +342,17 @@ const CourseCard = ({ course, index }: CourseCardProps) => {
               ) : (
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-xl font-black text-gray-900 leading-none">
-                    ৳{course.discountedPrice.toLocaleString()}
+                    {`৳${course.discountedPrice.toLocaleString()}`}
                   </span>
-                  <span className="text-xs text-gray-400 line-through">
-                    ৳{course.originalPrice.toLocaleString()}
-                  </span>
+                  {hasDiscount && (
+                    <span className="text-xs text-gray-400 line-through">
+                      {`৳${course.originalPrice.toLocaleString()}`}
+                    </span>
+                  )}
                 </div>
               )}
             </div>
 
-            {/* Button — matches nav register button style */}
             <Button
               size="sm"
               className="transition-all duration-300 bg-orange-500 hover:bg-orange-600 flex-shrink-0"

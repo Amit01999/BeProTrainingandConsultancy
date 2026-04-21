@@ -9,6 +9,7 @@ import {
   CheckCircle,
   Award,
   Briefcase,
+  Languages,
   Tag,
   GraduationCap,
   Star,
@@ -42,7 +43,8 @@ export default function CourseDetail1() {
   }
 
   const isFree = course.discountedPrice === 0;
-  const discount = !isFree
+  const hasDiscount = !isFree && course.originalPrice > course.discountedPrice;
+  const discount = hasDiscount
     ? Math.round(
         ((course.originalPrice - course.discountedPrice) /
           course.originalPrice) *
@@ -56,9 +58,7 @@ export default function CourseDetail1() {
         <title>{course.title}</title>
       </Helmet>
 
-      {/* ──────── HERO SECTION with Course Image ──────── */}
       <div className="relative w-full h-[420px] md:h-[460px] overflow-hidden">
-        {/* Course Image as Background */}
         {course.img ? (
           <img
             src={course.img}
@@ -69,26 +69,23 @@ export default function CourseDetail1() {
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-gray-900" />
         )}
 
-        {/* Gradient overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/25" />
 
-        {/* Hero Content */}
         <div className="relative z-10 h-full max-w-6xl mx-auto px-4 sm:px-6 flex flex-col justify-between py-6">
-          {/* Back link */}
           <Link to="/courses">
             <span className="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-sm font-medium transition-colors cursor-pointer">
               <ArrowLeft className="w-4 h-4" /> Back to Courses
             </span>
           </Link>
 
-          {/* Title + Meta */}
           <div className="max-w-2xl">
-            {/* Badges */}
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <Badge
                 className={`text-xs font-semibold px-2.5 py-1 rounded-full border-0 backdrop-blur-sm ${
                   course.category === 'nsda'
                     ? 'bg-blue-500/25 text-blue-300'
+                    : course.category === 'language'
+                      ? 'bg-cyan-500/25 text-cyan-300'
                     : 'bg-emerald-500/25 text-emerald-300'
                 }`}
               >
@@ -96,6 +93,11 @@ export default function CourseDetail1() {
                   <>
                     <Award className="w-3 h-3 mr-1 inline" />
                     NSDA Certified
+                  </>
+                ) : course.category === 'language' ? (
+                  <>
+                    <Languages className="w-3 h-3 mr-1 inline" />
+                    Language Training
                   </>
                 ) : (
                   <>
@@ -111,9 +113,18 @@ export default function CourseDetail1() {
                 </Badge>
               ) : (
                 <Badge className="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-500/90 text-white border-0">
-                  {discount}% OFF
+                  {hasDiscount ? `${discount}% OFF` : 'Course Fee'}
                 </Badge>
               )}
+
+              {course.programTags?.map(tag => (
+                <Badge
+                  key={tag}
+                  className="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/15 text-white border border-white/20 backdrop-blur-sm"
+                >
+                  {tag}
+                </Badge>
+              ))}
             </div>
 
             <h1 className="text-3xl md:text-[2.6rem] font-bold text-white leading-tight mb-3">
@@ -123,7 +134,6 @@ export default function CourseDetail1() {
               {course.description}
             </p>
 
-            {/* Quick stats strip */}
             <div className="flex flex-wrap items-center gap-5 mt-5">
               <span className="flex items-center gap-1.5 text-white/65 text-sm">
                 <Clock className="w-4 h-4 text-white/40" /> {course.duration}
@@ -135,25 +145,24 @@ export default function CourseDetail1() {
                 <Layers className="w-4 h-4 text-white/40" />
                 {course.category === 'nsda'
                   ? 'Government (NSDA)'
-                  : 'Skill Development'}
+                  : course.category === 'language'
+                    ? 'Language Training'
+                    : 'Skill Development'}
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ──────── MAIN CONTENT ──────── */}
       <div className="bg-gray-50 min-h-screen">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-            {/* ── LEFT: Course Details ── */}
             <div className="lg:col-span-2 space-y-4">
               {course.details.map((section, i) => (
                 <div
                   key={i}
                   className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"
                 >
-                  {/* Section Header */}
                   <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100">
                     <div
                       className={`p-2 rounded-lg ${
@@ -173,7 +182,6 @@ export default function CourseDetail1() {
                     </h2>
                   </div>
 
-                  {/* Content list */}
                   <ul className="px-5 py-4 space-y-2.5">
                     {section.content.map((item, j) => (
                       <li
@@ -189,11 +197,8 @@ export default function CourseDetail1() {
               ))}
             </div>
 
-            {/* ── RIGHT: Sidebar ── */}
             <div className="space-y-4 sticky top-4">
-              {/* Pricing Card */}
               <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-                {/* Price header */}
                 <div className="bg-gradient-to-br from-indigo-600 to-purple-600 px-5 py-5">
                   <p className="text-indigo-200 text-xs font-medium uppercase tracking-wide mb-1.5">
                     Total Course Fee
@@ -203,19 +208,22 @@ export default function CourseDetail1() {
                   ) : (
                     <div className="flex items-end gap-2 flex-wrap">
                       <p className="text-3xl font-bold text-white">
-                        ৳{course.discountedPrice.toLocaleString()}
+                        {`৳${course.discountedPrice.toLocaleString()}`}
                       </p>
-                      <p className="text-indigo-300 line-through text-sm pb-1">
-                        ৳{course.originalPrice.toLocaleString()}
-                      </p>
-                      <Badge className="mb-0.5 bg-orange-400 text-white text-xs border-0 px-2">
-                        -{discount}%
-                      </Badge>
+                      {hasDiscount && (
+                        <>
+                          <p className="text-indigo-300 line-through text-sm pb-1">
+                            {`৳${course.originalPrice.toLocaleString()}`}
+                          </p>
+                          <Badge className="mb-0.5 bg-orange-400 text-white text-xs border-0 px-2">
+                            -{discount}%
+                          </Badge>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
 
-                {/* Meta items */}
                 <div className="px-5 py-4 space-y-3 border-b border-gray-100">
                   {[
                     {
@@ -234,7 +242,9 @@ export default function CourseDetail1() {
                       value:
                         course.category === 'nsda'
                           ? 'Government (NSDA)'
-                          : 'Skill Development',
+                          : course.category === 'language'
+                            ? 'Language Training'
+                            : 'Skill Development',
                     },
                   ].map((meta, i) => (
                     <div key={i} className="flex items-center justify-between">
@@ -248,7 +258,6 @@ export default function CourseDetail1() {
                   ))}
                 </div>
 
-                {/* CTA */}
                 <div className="px-5 py-4">
                   <Link to="/login">
                     <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg transition-colors cursor-pointer">
@@ -262,7 +271,6 @@ export default function CourseDetail1() {
                 </div>
               </div>
 
-              {/* Why Choose Card */}
               <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-5 py-4">
                 <h3 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
                   <GraduationCap className="w-4 h-4 text-indigo-500" />

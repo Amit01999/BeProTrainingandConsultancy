@@ -5,6 +5,7 @@ import {
   Clock,
   Award,
   Briefcase,
+  Languages,
   ArrowRight,
   BookOpen,
   Layers,
@@ -15,7 +16,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'wouter';
 import { coursesData, type Course } from '@/data/coursesData';
 
-type FilterTab = 'all' | 'nsda' | 'skills';
+type FilterTab = 'all' | 'nsda' | 'skills' | 'language';
 
 const filterTabs: {
   key: FilterTab;
@@ -41,11 +42,13 @@ const filterTabs: {
     shortLabel: 'Skills',
     icon: <Briefcase className="h-4 w-4" />,
   },
+  {
+    key: 'language',
+    label: 'Language Training',
+    shortLabel: 'Language',
+    icon: <Languages className="h-4 w-4" />,
+  },
 ];
-
-/* ────────────────────────────────────────────────
-   MAIN PAGE
-   ──────────────────────────────────────────────── */
 
 const FeaturedCourses1 = () => {
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
@@ -57,7 +60,6 @@ const FeaturedCourses1 = () => {
 
   return (
     <div className="min-h-screen bg-[rgb(var(--whitebackground))]">
-      {/* ──────── FILTER TABS + CARDS ──────── */}
       <section className="py-2 sm:py-16 md:py-2 px-3 sm:px-6 lg:px-20 backdrop-blur-lg w-full">
         <div className="container mx-auto max-w-screen-2xl">
           <div className="flex items-center justify-center mb-8 md:mb-6">
@@ -95,7 +97,6 @@ const FeaturedCourses1 = () => {
             </div>
           </div>
 
-          {/* Course Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8 mb-10 sm:mb-16">
             {filtered.map((course, index) => (
               <CourseCard key={course.id} course={course} index={index} />
@@ -107,10 +108,6 @@ const FeaturedCourses1 = () => {
   );
 };
 
-/* ────────────────────────────────────────────────
-   COURSE CARD
-   ──────────────────────────────────────────────── */
-
 interface CourseCardProps {
   course: Course;
   index: number;
@@ -118,7 +115,8 @@ interface CourseCardProps {
 
 const CourseCard = ({ course, index }: CourseCardProps) => {
   const isFree = course.discountedPrice === 0;
-  const discount = !isFree
+  const hasDiscount = !isFree && course.originalPrice > course.discountedPrice;
+  const discount = hasDiscount
     ? Math.round(
         ((course.originalPrice - course.discountedPrice) /
           course.originalPrice) *
@@ -144,78 +142,66 @@ const CourseCard = ({ course, index }: CourseCardProps) => {
           transition-all duration-300 ease-out
         "
       >
-        {/* ── IMAGE BANNER ── */}
         <div className="relative h-48 overflow-hidden">
           <img
             src={course.img}
             alt={course.title}
-            className="absolute inset-0 w-full h-full object-cover
-                       group-hover:scale-105 transition-transform duration-700 ease-out"
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
 
-          {/* gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
 
-          {/* Badge — top left flush corner ribbon */}
           <div className="absolute top-0 left-0">
             {isFree ? (
-              <span
-                className="flex items-center gap-1 pl-3 pr-4 py-1.5
-                               bg-green-500 text-white text-[10px] font-black
-                               uppercase tracking-[0.1em] rounded-br-2xl
-                               shadow-[0_2px_10px_rgba(22,163,74,0.45)]"
-              >
+              <span className="flex items-center gap-1 pl-3 pr-4 py-1.5 bg-green-500 text-white text-[10px] font-black uppercase tracking-[0.1em] rounded-br-2xl shadow-[0_2px_10px_rgba(22,163,74,0.45)]">
                 <Tag className="h-2.5 w-2.5" />
                 Free
               </span>
-            ) : (
-              <span
-                className="flex items-center gap-1 pl-3 pr-4 py-1.5
-                               bg-orange-500 text-white text-[10px] font-black
-                               uppercase tracking-[0.1em] rounded-br-2xl
-                               shadow-[0_2px_10px_rgba(249,115,22,0.45)]"
-              >
+            ) : hasDiscount ? (
+              <span className="flex items-center gap-1 pl-3 pr-4 py-1.5 bg-orange-500 text-white text-[10px] font-black uppercase tracking-[0.1em] rounded-br-2xl shadow-[0_2px_10px_rgba(249,115,22,0.45)]">
                 <Tag className="h-2.5 w-2.5" />
                 {discount}% OFF
               </span>
-            )}
+            ) : null}
           </div>
 
-          {/* Category — top right flush corner */}
           <div className="absolute top-0 right-0">
-            <span
-              className="flex items-center gap-1.5 pr-3 pl-4 py-1.5
-                             text-[10px] font-black uppercase tracking-[0.1em]
-                             bg-black/50 backdrop-blur-sm text-white
-                             rounded-bl-2xl border-b border-l border-white/10"
-            >
+            <span className="flex items-center gap-1.5 pr-3 pl-4 py-1.5 text-[10px] font-black uppercase tracking-[0.1em] bg-black/50 backdrop-blur-sm text-white rounded-bl-2xl border-b border-l border-white/10">
               {course.category === 'nsda' ? (
                 <Award className="h-3 w-3 text-amber-300" />
+              ) : course.category === 'language' ? (
+                <Languages className="h-3 w-3 text-cyan-300" />
               ) : (
                 <Briefcase className="h-3 w-3 text-sky-300" />
               )}
-              {course.category === 'nsda' ? 'NSDA' : 'Skills'}
+              {course.category === 'nsda'
+                ? 'NSDA'
+                : course.category === 'language'
+                  ? 'Language'
+                  : 'Skills'}
             </span>
           </div>
+
+          {course.programTags?.length ? (
+            <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5 z-10">
+              {course.programTags.map(tag => (
+                <span
+                  key={tag}
+                  className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.08em] bg-white/90 text-slate-900 border border-white/70 backdrop-blur-sm shadow-sm"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          ) : null}
         </div>
 
-        {/* ── CARD BODY ── */}
         <div className="flex flex-col flex-1 px-4 pt-3.5 pb-4">
-          {/* Title only */}
-          <h3
-            className="text-[14.5px] font-bold text-gray-900 line-clamp-2
-                         leading-snug group-hover:text-primary
-                         transition-colors duration-200 flex-1"
-          >
+          <h3 className="text-[14.5px] font-bold text-gray-900 line-clamp-2 leading-snug group-hover:text-primary transition-colors duration-200 flex-1">
             {course.title}
           </h3>
 
-          {/* ── BOTTOM ROW: Price + Button ── */}
-          <div
-            className="flex items-center justify-between gap-3 mt-4
-                          pt-3.5 border-t-2 border-dashed border-gray-100"
-          >
-            {/* Price */}
+          <div className="flex items-center justify-between gap-3 mt-4 pt-3.5 border-t-2 border-dashed border-gray-100">
             <div>
               {isFree ? (
                 <span className="text-xl font-black text-green-500 leading-none">
@@ -224,16 +210,17 @@ const CourseCard = ({ course, index }: CourseCardProps) => {
               ) : (
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-xl font-black text-gray-900 leading-none">
-                    ৳{course.discountedPrice.toLocaleString()}
+                    {`৳${course.discountedPrice.toLocaleString()}`}
                   </span>
-                  <span className="text-xs text-gray-400 line-through">
-                    ৳{course.originalPrice.toLocaleString()}
-                  </span>
+                  {hasDiscount && (
+                    <span className="text-xs text-gray-400 line-through">
+                      {`৳${course.originalPrice.toLocaleString()}`}
+                    </span>
+                  )}
                 </div>
               )}
             </div>
 
-            {/* Button — matches nav register button style */}
             <Button
               size="sm"
               className="transition-all duration-300 bg-orange-500 hover:bg-orange-600 flex-shrink-0"
