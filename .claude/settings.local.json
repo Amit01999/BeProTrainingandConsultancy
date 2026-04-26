@@ -22,7 +22,9 @@
       "Bash(node ./db-check.mjs)",
       "Bash(python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f'Count: {len\\(d\\)}'\\); print\\('Keys on first item:', list\\(d[0].keys\\(\\)\\) if d else 'none'\\)\")",
       "Bash(node ./db-verify.mjs)",
-      "Bash(rm -f ./db-verify.mjs)"
+      "Bash(rm -f ./db-verify.mjs)",
+      "Bash(find . -name \"*.ts\" -path \"*/src/api/*\")",
+      "Bash(ls src/)"
     ]
   }
 }
