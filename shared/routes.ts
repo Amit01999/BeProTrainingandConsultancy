@@ -4,10 +4,15 @@ import {
   insertCourseSchema,
   insertApplicationSchema,
   insertContactSchema,
+  initiateEnrollmentSchema,
+  submitPaymentSchema,
   User,
   Course,
   Application,
   Contact,
+  Enrollment,
+  EnrollmentWithRefs,
+  UploadedImageResponse,
 } from './schema';
 
 export const errorSchemas = {
@@ -78,9 +83,10 @@ export const api = {
         200: z.array(z.custom<Course>()),
       },
     },
+    // Single source of truth for reads: resolves slug OR id
     get: {
       method: 'GET' as const,
-      path: '/api/courses/:id',
+      path: '/api/courses/:slug',
       responses: {
         200: z.custom<Course>(),
         404: errorSchemas.notFound,
@@ -112,6 +118,16 @@ export const api = {
       responses: {
         204: z.void(),
         404: errorSchemas.notFound,
+        401: errorSchemas.unauthorized,
+      },
+    },
+    uploadImage: {
+      method: 'POST' as const,
+      path: '/api/courses/upload-image',
+      // body is multipart/form-data; validation handled by multer middleware
+      responses: {
+        201: z.custom<UploadedImageResponse>(),
+        400: errorSchemas.validation,
         401: errorSchemas.unauthorized,
       },
     },
@@ -154,6 +170,80 @@ export const api = {
       responses: {
         201: z.custom<Contact>(),
         400: errorSchemas.validation,
+      },
+    },
+  },
+  enrollments: {
+    // Admin — list every enrollment (optionally filter by status)
+    list: {
+      method: 'GET' as const,
+      path: '/api/enrollments',
+      responses: {
+        200: z.array(z.custom<EnrollmentWithRefs>()),
+        401: errorSchemas.unauthorized,
+      },
+    },
+    // Authenticated user — list their own enrollments (optionally filter)
+    mine: {
+      method: 'GET' as const,
+      path: '/api/enrollments/user',
+      responses: {
+        200: z.array(z.custom<EnrollmentWithRefs>()),
+        401: errorSchemas.unauthorized,
+      },
+    },
+    // Step 1: "Enroll Now" — upserts an `initiated` enrollment (idempotent)
+    create: {
+      method: 'POST' as const,
+      path: '/api/enrollments',
+      input: initiateEnrollmentSchema,
+      responses: {
+        201: z.custom<Enrollment>(),
+        200: z.custom<Enrollment>(),
+        400: errorSchemas.validation,
+        401: errorSchemas.unauthorized,
+      },
+    },
+    // Step 2: "Submit Payment" — moves initiated|rejected → pending
+    pay: {
+      method: 'PATCH' as const,
+      path: '/api/enrollments/:id/pay',
+      input: submitPaymentSchema,
+      responses: {
+        200: z.custom<Enrollment>(),
+        400: errorSchemas.validation,
+        401: errorSchemas.unauthorized,
+        404: errorSchemas.notFound,
+      },
+    },
+    verify: {
+      method: 'PATCH' as const,
+      path: '/api/enrollments/:id/verify',
+      responses: {
+        200: z.custom<EnrollmentWithRefs>(),
+        404: errorSchemas.notFound,
+        401: errorSchemas.unauthorized,
+      },
+    },
+    reject: {
+      method: 'PATCH' as const,
+      path: '/api/enrollments/:id/reject',
+      input: z
+        .object({ notes: z.string().max(500).optional() })
+        .optional(),
+      responses: {
+        200: z.custom<EnrollmentWithRefs>(),
+        404: errorSchemas.notFound,
+        401: errorSchemas.unauthorized,
+      },
+    },
+    uploadScreenshot: {
+      method: 'POST' as const,
+      path: '/api/enrollments/upload-screenshot',
+      responses: {
+        201: z.custom<UploadedImageResponse>(),
+        400: errorSchemas.validation,
+        401: errorSchemas.unauthorized,
       },
     },
   },

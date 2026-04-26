@@ -15,7 +15,14 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(npx tsc *)",
+      "Bash(git stash *)",
+      "Bash(mv /tmp/db-check.mjs ./db-check.mjs)",
+      "Bash(node ./db-check.mjs)",
+      "Bash(python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f'Count: {len\\(d\\)}'\\); print\\('Keys on first item:', list\\(d[0].keys\\(\\)\\) if d else 'none'\\)\")",
+      "Bash(node ./db-verify.mjs)",
+      "Bash(rm -f ./db-verify.mjs)"
     ]
   }
 }

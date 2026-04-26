@@ -13,7 +13,7 @@
     "bootcamp": "WE Bootcamp"
   },
   "footer": {
-    "tagline": "Stop learning for certificates.",
+    "tagline": "Where learning begins and careers are built.",
     "description": "Learnify focuses on applied skills, real practice, and results that translate directly to your job and career.",
     "platform": "Education platform",
     "copyright": "© {{year}} BePro Training and Consultancy",
@@ -54,5 +54,49 @@
     "description": "Join thousands of students who have transformed their careers with",
     "company": "BePro Training and Consultancy",
     "with": "with"
+  },
+  "benefits": {
+    "sectionLabel": "Student Benefits",
+    "title": "Why Choose",
+    "titleHighlight": "BePro Institute?",
+    "subtitle": "At BePro Training Institute, students benefit from a comprehensive support system designed to bridge the gap between education and employment.",
+    "items": [
+      {
+        "title": "Government-Recognized Certificate",
+        "description": "Receive a formal certification that is officially recognized by the government upon course completion."
+      },
+      {
+        "title": "Hands-on Experience",
+        "description": "Gain practical, real-world experience through project-based learning and live assignments."
+      },
+      {
+        "title": "Job Placement Support",
+        "description": "Get dedicated assistance in finding and securing employment opportunities after your course."
+      },
+      {
+        "title": "Career Guidelines",
+        "description": "Receive expert advice and clear roadmaps for professional growth and career advancement."
+      },
+      {
+        "title": "Industry Mentorship & Networking",
+        "description": "Direct access to industry experts, mentors, and professional networks in your field."
+      },
+      {
+        "title": "Freelancing Support",
+        "description": "Guidance on how to start and succeed in the global freelance market with proven strategies."
+      },
+      {
+        "title": "Part-time Job Opportunities",
+        "description": "Access flexible work options during or after the course to build experience and income."
+      },
+      {
+        "title": "Private Practice Support Group",
+        "description": "Community access for those looking to start their own ventures or independent practice."
+      },
+      {
+        "title": "Internship Opportunity",
+        "description": "Programs designed to provide essential workplace exposure and hands-on industry experience."
+      }
+    ]
   }
 }

@@ -6,29 +6,27 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import HeroSection from '@/components/HeroSection';
 import FeaturedCourses from '@/components/FeaturedCourses';
-import Upgradeyourskills from '@/components/Upgradeyourskills';
+import Benefits from '@/components/Benefits';
 import TopCourse from '@/components/TopCourse';
 import FinalCTA from '@/components/FinalCTA';
 import SkillsBoostPreview from '@/components/SkillsBoostPreview';
 import UCEPPreview from '@/components/home/UCEPPreview';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
-import FeaturedCourses1 from '@/components/FeaturedCourses1';
-
 export default function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden">
       {/* HeroSection */}
       <HeroSection />
       {/* Featured Courses Carousel Section */}
-      <FeaturedCourses1 />
+      <FeaturedCourses />
       {/* Upgrade Skills Section */}
       <SkillsBoostPreview />
-      {/* Upgrade Skills Section */}
-      {/* <Upgradeyourskills /> */}
       {/* Explore Top Courses */}
       <TopCourse />
       {/* UCEPPreview  Section */}
       {/* <UCEPPreview /> */}
+      {/* Upgrade Skills Section */}
+      <Benefits />
       {/* Final CTA Section */}
       <FinalCTA />
       {/* Testimonials Section */}

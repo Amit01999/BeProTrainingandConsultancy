@@ -58,19 +58,12 @@ export function Navbar() {
     };
   }, []);
 
-  // const links = [
-  //   { href: '/', label: t('nav.home') },
-  //   { href: '/courses', label: t('nav.courses') },
-  //   { href: '/skills', label: t('nav.skillsBoost') },
-  //   { href: '/services', label: t('nav.services') },
-  //   { href: '/contact', label: t('nav.contact') },
-  // ];
-
   const links = [
     { href: '/', label: t('nav.home') },
     { href: '/courses', label: t('nav.courses') },
     { href: '/skills', label: t('nav.skillsBoost') },
     { href: '/services', label: t('nav.services') },
+    { href: '/why-bepro', label: isBangla ? 'কেন BEPRO?' : 'Why BePro?' },
     { href: '/contact', label: t('nav.contact') },
   ];
 
@@ -340,8 +333,6 @@ export function Navbar() {
                       <div className="flex flex-col p-4 space-y-1 flex-1 overflow-y-auto">
                         <NavLinks mobile />
                       </div>
-
-                      {/* Contact info (visible only on mobile drawer) */}
 
                       {/* Auth */}
                       <div className="p-5 border-t bg-gray-50 space-y-4">

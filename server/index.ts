@@ -16,6 +16,7 @@ declare module 'http' {
 
 app.use(
   express.json({
+    limit: '2mb',
     verify: (req, _res, buf) => {
       req.rawBody = buf;
     },
@@ -38,45 +39,37 @@ export function log(message: string, source = 'express') {
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
-
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
 
   res.on('finish', () => {
     const duration = Date.now() - start;
     if (path.startsWith('/api')) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-
-      log(logLine);
+      log(`${req.method} ${path} ${res.statusCode} in ${duration}ms`);
     }
   });
 
   next();
 });
 
-(async () => {
+// Process-level safety nets: log and keep the server running instead of
+// tearing down and serving stale 500s to unrelated requests.
+process.on('unhandledRejection', (reason: any) => {
+  console.error('[process] unhandledRejection:', reason?.stack || reason);
+});
+process.on('uncaughtException', err => {
+  console.error('[process] uncaughtException:', err?.stack || err);
+});
+
+async function bootstrap() {
+  // 1) Connect to MongoDB — fails fast if env is wrong or Atlas is unreachable.
   const { connectDB } = await import('./db');
   await connectDB();
+
+  // 2) Register all API routes + session/passport (setupAuth is async now:
+  //    it needs mongoose.connection.getClient() to back the session store).
   await registerRoutes(httpServer, app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || 'Internal Server Error';
-
-    res.status(status).json({ message });
-    throw err;
-  });
-
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
+  // 3) Dev UI (Vite middleware) must come AFTER the API routes so its
+  //    catch-all doesn't swallow /api/*.
   if (process.env.NODE_ENV === 'production') {
     serveStatic(app);
   } else {
@@ -84,19 +77,29 @@ app.use((req, res, next) => {
     await setupVite(httpServer, app);
   }
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
-  // Handle listen errors gracefully (some shells/distributions restrict binding)
-  httpServer.on('error', (err: any) => {
-    log(`http server error: ${err.message}`, 'server');
-    // In development, don't crash the process - show error and exit with non-zero
-    process.exit(1);
+  // 4) Final error handler — for anything that slipped past the per-route
+  //    handlers. Respond once, log the stack, and do NOT rethrow.
+  app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+    if (res.headersSent) return; // response already flushed, nothing we can do
+    const status = err?.status || err?.statusCode || 500;
+    const message =
+      status < 500 && err?.message ? err.message : 'Internal Server Error';
+    console.error('[fatal]', req.method, req.path, err?.stack || err);
+    res.status(status).json({ message });
   });
 
+  // 5) Only now start accepting traffic.
+  const port = parseInt(process.env.PORT || '5000', 10);
+  httpServer.on('error', (err: any) => {
+    log(`http server error: ${err.message}`, 'server');
+    process.exit(1);
+  });
   httpServer.listen(port, () => {
     log(`serving on port ${port}`);
   });
-})();
+}
+
+bootstrap().catch(err => {
+  console.error('[bootstrap] fatal error during startup:', err);
+  process.exit(1);
+});

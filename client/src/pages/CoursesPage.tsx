@@ -1,20 +1,19 @@
-import { useState } from 'react';
-import { Badge } from '@/components/ui/badge';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
-  Clock,
   Award,
   Briefcase,
   Languages,
   ArrowRight,
-  BookOpen,
   Layers,
   Tag,
   GraduationCap,
+  Loader2,
 } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'wouter';
-import { coursesData, type Course } from '@/data/coursesData';
+import { useCourses } from '@/hooks/use-courses';
+import type { Course } from '@shared/schema';
 
 type FilterTab = 'all' | 'nsda' | 'skills' | 'language';
 
@@ -50,13 +49,33 @@ const filterTabs: {
   },
 ];
 
-const CoursesPage1 = () => {
-  const [activeTab, setActiveTab] = useState<FilterTab>('all');
+const IMAGE_FALLBACK =
+  'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200';
 
-  const filtered: Course[] =
-    activeTab === 'all'
-      ? coursesData
-      : coursesData.filter(c => c.category === activeTab);
+function normalizeCategory(value: string): FilterTab | 'other' {
+  const v = value.toLowerCase();
+  if (v === 'nsda') return 'nsda';
+  if (v === 'language') return 'language';
+  if (v === 'skills' || v === 'skill development' || v === 'skillsboost')
+    return 'skills';
+  return 'other';
+}
+
+const CoursesPage = () => {
+  const [activeTab, setActiveTab] = useState<FilterTab>('all');
+  const {
+    data: courses = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isFetching,
+  } = useCourses();
+
+  const filtered = useMemo<Course[]>(() => {
+    if (activeTab === 'all') return courses;
+    return courses.filter(c => normalizeCategory(c.category) === activeTab);
+  }, [courses, activeTab]);
 
   return (
     <div className="min-h-screen bg-[rgb(var(--whitebackground))]">
@@ -76,9 +95,7 @@ const CoursesPage1 = () => {
               "url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
           }}
         />
-
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
-
         <div
           className="absolute inset-0 opacity-10"
           style={{
@@ -90,31 +107,18 @@ const CoursesPage1 = () => {
 
         <div className="relative z-10 container mx-auto px-6 lg:px-16 py-20 md:py-28">
           <div className="max-w-4xl mx-auto text-center">
-            <div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full 
-        bg-white/20 backdrop-blur-sm border border-white/40 
-        text-white font-medium mb-6 animate-fade-in"
-            >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/40 text-white font-medium mb-6 animate-fade-in">
               <GraduationCap className="h-4 w-4" />
               <span className="text-sm font-semibold">
                 Professional Skill Development
               </span>
             </div>
 
-            <h1
-              className="text-5xl md:text-7xl lg:text-8xl font-extrabold 
-        mb-6 text-white drop-shadow-[0_3px_6px_rgba(0,0,0,0.45)] 
-        tracking-tight animate-slide-up"
-            >
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-6 text-white drop-shadow-[0_3px_6px_rgba(0,0,0,0.45)] tracking-tight animate-slide-up">
               COURSES
             </h1>
 
-            <p
-              className="text-xl md:text-2xl lg:text-3xl 
-        text-white/90 font-bangla leading-relaxed mb-8 
-        animate-slide-up-delay max-w-3xl mx-auto 
-        drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"
-            >
+            <p className="text-xl md:text-2xl lg:text-3xl text-white/90 font-bangla leading-relaxed mb-8 animate-slide-up-delay max-w-3xl mx-auto drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
               Government-certified (NSDA-approved) courses and skill development
               programs
             </p>
@@ -122,13 +126,12 @@ const CoursesPage1 = () => {
             <div className="flex flex-wrap justify-center gap-6 md:gap-12 text-white">
               <div className="text-center animate-fade-in-delay">
                 <div className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_3px_6px_rgba(0,0,0,0.4)]">
-                  {coursesData.length}+
+                  {courses.length}+
                 </div>
                 <div className="text-sm md:text-base text-white/85 mt-1">
                   Courses
                 </div>
               </div>
-
               <div className="text-center animate-fade-in-delay-2">
                 <div className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_3px_6px_rgba(0,0,0,0.4)]">
                   500+
@@ -137,7 +140,6 @@ const CoursesPage1 = () => {
                   Students
                 </div>
               </div>
-
               <div className="text-center animate-fade-in-delay-3">
                 <div className="text-4xl md:text-5xl font-bold text-white drop-shadow-[0_3px_6px_rgba(0,0,0,0.4)]">
                   95%
@@ -172,7 +174,6 @@ const CoursesPage1 = () => {
               <div className="inline-flex bg-white rounded-lg sm:rounded-xl border-2 border-black p-0.5 sm:p-1 gap-1 sm:gap-2 shadow-[3px_3px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_rgba(0,0,0,1)]">
                 {filterTabs.map(tab => {
                   const isActive = activeTab === tab.key;
-
                   return (
                     <button
                       key={tab.key}
@@ -202,11 +203,50 @@ const CoursesPage1 = () => {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-            {filtered.map((course, index) => (
-              <CourseCard key={course.id} course={course} index={index} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-24 text-gray-500">
+              <Loader2 className="w-6 h-6 animate-spin mr-3" />
+              Loading courses…
+            </div>
+          ) : isError ? (
+            <div className="max-w-md mx-auto text-center py-20">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                We couldn&apos;t load the course list
+              </h3>
+              <p className="text-sm text-gray-500 mb-6">
+                {(error as Error)?.message ||
+                  'The server may still be starting up. Please try again in a moment.'}
+              </p>
+              <Button
+                onClick={() => refetch()}
+                disabled={isFetching}
+                className="bg-primary hover:bg-primary/90 text-white"
+              >
+                {isFetching ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Retrying…
+                  </>
+                ) : (
+                  'Retry'
+                )}
+              </Button>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-24 text-gray-500">
+              No courses found in this category yet.
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+              {filtered.map((course, index) => (
+                <CourseCard
+                  key={course._id}
+                  course={course}
+                  index={index}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -218,12 +258,10 @@ const CoursesPage1 = () => {
           <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-gray-900 tracking-tight">
             Need Help Choosing the Right Course?
           </h2>
-
           <p className="text-gray-700 mb-10 max-w-xl mx-auto leading-relaxed text-base md:text-lg">
             Our team can help you find the perfect course to match your goals
             and career aspirations.
           </p>
-
           <Button
             asChild
             size="lg"
@@ -246,19 +284,19 @@ interface CourseCardProps {
 }
 
 const CourseCard = ({ course, index }: CourseCardProps) => {
-  const isFree = course.discountedPrice === 0;
-  const hasDiscount = !isFree && course.originalPrice > course.discountedPrice;
+  const discounted = course.discountedPrice ?? 0;
+  const original = course.originalPrice ?? 0;
+  const isFree = discounted === 0 && original === 0;
+  const hasDiscount = !isFree && original > discounted && discounted > 0;
   const discount = hasDiscount
-    ? Math.round(
-        ((course.originalPrice - course.discountedPrice) /
-          course.originalPrice) *
-          100,
-      )
+    ? Math.round(((original - discounted) / original) * 100)
     : 0;
+  const categoryKind = normalizeCategory(course.category);
+  const image = course.imageUrl || IMAGE_FALLBACK;
 
   return (
     <Link
-      to={`/courses1/${course.id}`}
+      to={`/courses/${course.slug}`}
       className="group block"
       style={{ animationDelay: `${index * 80}ms` }}
     >
@@ -276,11 +314,10 @@ const CourseCard = ({ course, index }: CourseCardProps) => {
       >
         <div className="relative h-48 overflow-hidden">
           <img
-            src={course.img}
+            src={image}
             alt={course.title}
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
-
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
 
           <div className="absolute top-0 left-0">
@@ -299,16 +336,16 @@ const CourseCard = ({ course, index }: CourseCardProps) => {
 
           <div className="absolute top-0 right-0">
             <span className="flex items-center gap-1.5 pr-3 pl-4 py-1.5 text-[10px] font-black uppercase tracking-[0.1em] bg-black/50 backdrop-blur-sm text-white rounded-bl-2xl border-b border-l border-white/10">
-              {course.category === 'nsda' ? (
+              {categoryKind === 'nsda' ? (
                 <Award className="h-3 w-3 text-amber-300" />
-              ) : course.category === 'language' ? (
+              ) : categoryKind === 'language' ? (
                 <Languages className="h-3 w-3 text-cyan-300" />
               ) : (
                 <Briefcase className="h-3 w-3 text-sky-300" />
               )}
-              {course.category === 'nsda'
+              {categoryKind === 'nsda'
                 ? 'NSDA'
-                : course.category === 'language'
+                : categoryKind === 'language'
                   ? 'Language'
                   : 'Skills'}
             </span>
@@ -342,11 +379,11 @@ const CourseCard = ({ course, index }: CourseCardProps) => {
               ) : (
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-xl font-black text-gray-900 leading-none">
-                    {`৳${course.discountedPrice.toLocaleString()}`}
+                    {`৳${discounted.toLocaleString()}`}
                   </span>
                   {hasDiscount && (
                     <span className="text-xs text-gray-400 line-through">
-                      {`৳${course.originalPrice.toLocaleString()}`}
+                      {`৳${original.toLocaleString()}`}
                     </span>
                   )}
                 </div>
@@ -366,4 +403,4 @@ const CourseCard = ({ course, index }: CourseCardProps) => {
   );
 };
 
-export default CoursesPage1;
+export default CoursesPage;

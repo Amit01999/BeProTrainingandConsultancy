@@ -26,22 +26,6 @@ const CoursesPage = () => {
   const { t, i18n } = useTranslation(['pages', 'common', 'courses']);
   const isBangla = i18n.language === 'bn';
 
-  // Debug: Log all courses when they're loaded
-  useEffect(() => {
-    if (allCourses && allCourses.length > 0) {
-      console.log('=== ALL COURSES DEBUG ===');
-      console.log('Total courses:', allCourses.length);
-      allCourses.forEach((course, index) => {
-        console.log(`Course ${index + 1}:`, {
-          title: course.title,
-          titleBn: course.titleBn,
-          category: course.category,
-          level: course.level,
-        });
-      });
-    }
-  }, [allCourses]);
-
   // Filter courses based on active tab with FIXED logic for actual database categories
   const filteredCourses = useMemo(() => {
     if (!allCourses || allCourses.length === 0) {
@@ -58,8 +42,7 @@ const CoursesPage = () => {
         const category = course.category?.toUpperCase() || '';
         return category.includes('NSDA');
       });
-      console.log('=== GOVERNMENT (NSDA) FILTER ===');
-      console.log('Filtered courses count:', filtered.length);
+
       filtered.forEach(course => {
         console.log('- ', course.title, '(Category:', course.category, ')');
       });

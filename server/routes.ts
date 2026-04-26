@@ -1,17 +1,73 @@
-import type { Express } from 'express';
-import { createServer, type Server } from 'http';
+import type { Express, Request, Response, NextFunction } from 'express';
+import passport from 'passport';
+import { type Server } from 'http';
 import { storage } from './storage';
 import { api } from '@shared/routes';
 import { setupAuth } from './auth';
 import { z } from 'zod';
+import {
+  listCourses,
+  getCourseBySlug,
+  createCourse,
+  updateCourse,
+  deleteCourse,
+  uploadCourseImage,
+} from './controllers/course.controller';
+import {
+  createEnrollment,
+  payEnrollment,
+  listMyEnrollments,
+  listEnrollments,
+  verifyEnrollment,
+  rejectEnrollment,
+  uploadPaymentScreenshot,
+} from './controllers/enrollment.controller';
+import { imageUpload } from './middleware/upload';
+import { runSeed } from './seed-data';
+import { isDbReady } from './db';
+
+function requireAuth(req: Request, res: Response, next: NextFunction) {
+  if (!req.isAuthenticated?.()) return res.status(401).send();
+  next();
+}
+
+function requireAdmin(req: Request, res: Response, next: NextFunction) {
+  if (!req.isAuthenticated?.() || (req.user as any)?.role !== 'admin') {
+    return res.status(401).send();
+  }
+  next();
+}
 
 export async function registerRoutes(
   httpServer: Server,
-  app: Express
+  app: Express,
 ): Promise<Server> {
-  const crypto = setupAuth(app);
+  const crypto = await setupAuth(app);
 
-  // Auth Routes
+  // ─── Readiness probe ────────────────────────────────────────────────────
+  // Cheap, side-effect-free check used by the frontend (and any uptime probe)
+  // to tell "server process is up" from "server is ready to serve API".
+  app.get('/api/health', (_req, res) => {
+    const ready = isDbReady();
+    res.status(ready ? 200 : 503).json({
+      status: ready ? 'ok' : 'starting',
+      db: ready ? 'connected' : 'not-ready',
+      uptime: process.uptime(),
+    });
+  });
+
+  // If the DB is down mid-request, fail fast with 503 + Retry-After so the
+  // client can back off gracefully instead of hanging on a Mongoose timeout.
+  app.use('/api', (req, res, next) => {
+    if (req.path === '/health') return next();
+    if (isDbReady()) return next();
+    res.set('Retry-After', '2');
+    res.status(503).json({
+      message: 'Service is starting up. Please retry in a moment.',
+    });
+  });
+
+  // ─── Auth ───────────────────────────────────────────────────────────────
   app.post(api.auth.register.path, async (req, res, next) => {
     try {
       const existing = await storage.getUserByUsername(req.body.username);
@@ -39,230 +95,131 @@ export async function registerRoutes(
   });
 
   app.post(api.auth.login.path, (req, res, next) => {
-    passport.authenticate('local', (err: any, user: any, info: any) => {
+    passport.authenticate('local', (err: any, user: any) => {
       if (err) return next(err);
       if (!user)
         return res.status(401).json({ message: 'Invalid credentials' });
-      req.login(user, (err: any) => {
-        if (err) return next(err);
+      req.login(user, (err2: any) => {
+        if (err2) return next(err2);
         res.status(200).json(user);
       });
     })(req, res, next);
   });
 
   app.post(api.auth.logout.path, (req, res) => {
-    req.logout(() => {
-      res.status(200).send();
-    });
+    req.logout(() => res.status(200).send());
   });
 
   app.get(api.auth.me.path, (req, res) => {
+    console.log('[/api/user] sessionID:', req.sessionID, '| isAuthenticated:', req.isAuthenticated(), '| user:', (req.user as any)?.username ?? null);
     if (!req.user) return res.status(401).send();
     res.json(req.user);
   });
 
-  // Middleware to require login
-  const requireAuth = (req: any, res: any, next: any) => {
-    if (!req.isAuthenticated()) return res.status(401).send();
-    next();
-  };
+  // ─── Courses ────────────────────────────────────────────────────────────
+  // Order matters: static paths (upload-image) before dynamic (:slug) so they
+  // are not swallowed by the slug matcher.
+  app.get(api.courses.list.path, listCourses);
+  app.post(
+    api.courses.uploadImage.path,
+    requireAdmin,
+    imageUpload.single('image'),
+    uploadCourseImage,
+  );
+  app.get(api.courses.get.path, getCourseBySlug);
+  app.post(api.courses.create.path, requireAdmin, createCourse);
+  app.put(api.courses.update.path, requireAdmin, updateCourse);
+  app.delete(api.courses.delete.path, requireAdmin, deleteCourse);
 
-  const requireAdmin = (req: any, res: any, next: any) => {
-    if (!req.isAuthenticated() || req.user.role !== 'admin')
-      return res.status(401).send();
-    next();
-  };
+  // ─── Enrollments ────────────────────────────────────────────────────────
+  // Static paths (`/user`, `/upload-screenshot`) registered before `:id`
+  // handlers so they aren't swallowed by parameterized routes.
+  app.get(api.enrollments.mine.path, requireAuth, listMyEnrollments);
+  app.post(
+    api.enrollments.uploadScreenshot.path,
+    requireAuth,
+    imageUpload.single('image'),
+    uploadPaymentScreenshot,
+  );
+  app.post(api.enrollments.create.path, requireAuth, createEnrollment);
+  app.patch(api.enrollments.pay.path, requireAuth, payEnrollment);
+  app.get(api.enrollments.list.path, requireAdmin, listEnrollments);
+  app.patch(api.enrollments.verify.path, requireAdmin, verifyEnrollment);
+  app.patch(api.enrollments.reject.path, requireAdmin, rejectEnrollment);
 
-  // Course Routes
-  app.get(api.courses.list.path, async (req, res) => {
-    const category = req.query.category as string | undefined;
-    const courses = await storage.getCourses(category);
-    res.json(courses);
-  });
-
-  app.get(api.courses.get.path, async (req, res) => {
-    const course = await storage.getCourse(req.params.id);
-    if (!course) return res.status(404).json({ message: 'Course not found' });
-    res.json(course);
-  });
-
-  app.post(api.courses.create.path, requireAdmin, async (req, res) => {
-    try {
-      const input = api.courses.create.input.parse(req.body);
-      const course = await storage.createCourse(input);
-      res.status(201).json(course);
-    } catch (err) {
-      if (err instanceof z.ZodError)
-        res.status(400).json({ message: err.errors[0].message });
-      else throw err;
-    }
-  });
-
-  app.put(api.courses.update.path, requireAdmin, async (req, res) => {
-    const course = await storage.updateCourse(req.params.id, req.body);
-    res.json(course);
-  });
-
-  app.delete(api.courses.delete.path, requireAdmin, async (req, res) => {
-    await storage.deleteCourse(req.params.id);
-    res.status(204).send();
-  });
-
-  // Application Routes
-  app.post(api.applications.create.path, async (req, res) => {
+  // ─── Applications ───────────────────────────────────────────────────────
+  app.post(api.applications.create.path, async (req, res, next) => {
     try {
       const input = api.applications.create.input.parse({
         ...req.body,
-        userId: req.user?.id || null,
-        email: req.body.email || req.user?.email || null,
+        userId: (req.user as any)?.id || null,
+        email: req.body.email || (req.user as any)?.email || null,
       });
-      const app = await storage.createApplication(input);
-      res.status(201).json(app);
+      const created = await storage.createApplication(input);
+      res.status(201).json(created);
     } catch (err) {
       if (err instanceof z.ZodError) {
         res.status(400).json({ message: err.errors[0].message });
       } else {
-        throw err;
+        next(err);
       }
     }
   });
 
-  app.get(api.applications.list.path, requireAdmin, async (req, res) => {
-    const apps = await storage.getApplications();
-    res.json(apps);
+  app.get(api.applications.list.path, requireAdmin, async (_req, res, next) => {
+    try {
+      res.json(await storage.getApplications());
+    } catch (err) {
+      next(err);
+    }
   });
 
   app.patch(
     api.applications.updateStatus.path,
     requireAdmin,
-    async (req, res) => {
-      const app = await storage.updateApplicationStatus(
-        req.params.id,
-        req.body.status
-      );
-      res.json(app);
-    }
+    async (req, res, next) => {
+      try {
+        const updated = await storage.updateApplicationStatus(
+          req.params.id,
+          req.body.status,
+        );
+        res.json(updated);
+      } catch (err) {
+        next(err);
+      }
+    },
   );
 
-  // Contact Routes
-  app.post(api.contacts.create.path, async (req, res) => {
-    const input = api.contacts.create.input.parse(req.body);
-    const contact = await storage.createContact(input);
-    res.status(201).json(contact);
+  // ─── Contacts ───────────────────────────────────────────────────────────
+  app.post(api.contacts.create.path, async (req, res, next) => {
+    try {
+      const input = api.contacts.create.input.parse(req.body);
+      const contact = await storage.createContact(input);
+      res.status(201).json(contact);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        res.status(400).json({ message: err.errors[0].message });
+      } else {
+        next(err);
+      }
+    }
   });
 
-  // SEED DATA
+  // ─── Global API error handler ───────────────────────────────────────────
+  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    if (!req.path.startsWith('/api')) return next(err);
+    if (res.headersSent) return next(err);
+    console.error('[api error]', req.method, req.path, err?.message || err);
+    const status = typeof err?.status === 'number' ? err.status : 500;
+    res.status(status).json({
+      message: err?.message || 'Internal server error',
+    });
+  });
+
+  // ─── Seed (dev only) ────────────────────────────────────────────────────
   if (process.env.NODE_ENV !== 'production') {
-    const existingCourses = await storage.getCourses();
-    if (existingCourses.length === 0) {
-      console.log('Seeding database...');
-
-      // Admin User
-      const adminPassword = await crypto.hash('admin123');
-      await storage.createUser({
-        username: 'admin',
-        password: adminPassword,
-        role: 'admin',
-        fullName: 'System Admin',
-        email: 'admin@bepro.com',
-        phone: '01995-555588',
-      });
-
-      // Government Courses (NSDA)
-      await storage.createCourse({
-        title: 'Graphic Design',
-        titleBn: 'গ্রাফিক ডিজাইন',
-        category: 'NSDA',
-        level: 'L-2',
-        duration: '২৪ দিন',
-        fee: 'Free',
-        description: 'Professional graphic design training with industry-standard tools including Adobe Photoshop, Illustrator, and InDesign. NSDA certified course with job placement support.',
-        descriptionBn: 'অ্যাডোবি ফটোশপ, ইলাস্ট্রেটর এবং ইনডিজাইন সহ শিল্প-মানের সরঞ্জাম দিয়ে পেশাদার গ্রাফিক ডিজাইন প্রশিক্ষণ।',
-        features: ['Adobe Suite Training', 'Portfolio Development', 'NSDA Certificate', 'Job Placement Support'],
-        isFeatured: true,
-      });
-      await storage.createCourse({
-        title: 'Graphic Design Soft Training',
-        titleBn: 'গ্রাফিক ডিজাইন সফট ট্রেনিং',
-        category: 'NSDA',
-        level: 'L-3',
-        duration: '২৪ দিন',
-        fee: 'Free',
-        description: 'Advanced graphic design skills combined with soft skills integration for enhanced career success. Includes advanced typography, branding, and client communication.',
-        descriptionBn: 'উন্নত টাইপোগ্রাফি, ব্র্যান্ডিং এবং ক্লায়েন্ট যোগাযোগ সহ উন্নত গ্রাফিক ডিজাইন দক্ষতা।',
-        features: ['Advanced Design Techniques', 'Branding & Identity', 'Client Communication', 'Soft Skills Integration'],
-      });
-      await storage.createCourse({
-        title: 'Digital Marketing Soft Training',
-        titleBn: 'ডিজিটাল মার্কেটিং সফট ট্রেনিং',
-        category: 'NSDA',
-        level: 'L-3',
-        duration: '২৪ দিন',
-        fee: 'Free',
-        description: 'Complete digital marketing training covering SEO, social media marketing, Google Ads, content marketing, and analytics with soft skills development.',
-        descriptionBn: 'এসইও, সোশ্যাল মিডিয়া মার্কেটিং, গুগল অ্যাডস, কন্টেন্ট মার্কেটিং এবং অ্যানালিটিক্স সম্পূর্ণ ডিজিটাল মার্কেটিং প্রশিক্ষণ।',
-        features: ['SEO & SEM', 'Social Media Marketing', 'Google Analytics', 'Content Strategy'],
-        isFeatured: true,
-      });
-
-      // Private Courses
-      await storage.createCourse({
-        title: 'Entrepreneurship Development Training',
-        titleBn: 'উদ্যোক্তা উন্নয়ন প্রশিক্ষণ',
-        category: 'Professional',
-        duration: '৭ দিন',
-        fee: '৳২,০০০',
-        description: 'Learn to start and grow your own business with practical entrepreneurship skills. Covers business planning, financial management, marketing, and legal requirements.',
-        descriptionBn: 'ব্যবসা পরিকল্পনা, আর্থিক ব্যবস্থাপনা, মার্কেটিং এবং আইনি প্রয়োজনীয়তা সহ নিজের ব্যবসা শুরু করুন।',
-        features: ['Business Planning', 'Financial Management', 'Marketing Strategy', 'Legal Compliance'],
-      });
-      await storage.createCourse({
-        title: 'Corporate Training',
-        titleBn: 'কর্পোরেট ট্রেনিং',
-        category: 'Corporate',
-        duration: 'Custom',
-        fee: 'Contact Us',
-        description: 'Tailored training programs for NGOs, banks, hospitals, and corporate organizations. Includes office etiquette, communication, and emotional intelligence.',
-        descriptionBn: 'এনজিও, ব্যাংক, হাসপাতাল এবং কর্পোরেট সংস্থাগুলির জন্য কাস্টমাইজড প্রশিক্ষণ প্রোগ্রাম।',
-        features: ['Office Etiquette', 'Professional Communication', 'Team Building', 'Leadership Skills'],
-      });
-      await storage.createCourse({
-        title: 'Foreign Job Orientation',
-        titleBn: 'বিদেশ চাকরি ওরিয়েন্টেশন',
-        category: 'Professional',
-        duration: '৭ দিন',
-        fee: '৳২,০০০',
-        description: 'Comprehensive preparation for overseas job seekers including CV writing, interview skills, basic English, and cultural orientation.',
-        descriptionBn: 'সিভি লেখা, ইন্টারভিউ দক্ষতা, বেসিক ইংরেজি এবং সাংস্কৃতিক ওরিয়েন্টেশন সহ বিদেশী চাকরি প্রস্তুতি।',
-        features: ['CV Writing', 'Interview Preparation', 'Basic English', 'Cultural Training'],
-      });
-      await storage.createCourse({
-        title: 'Language Training',
-        titleBn: 'ভাষা প্রশিক্ষণ',
-        category: 'Language',
-        duration: '৩০ দিন',
-        fee: '৳৫,০০০ (German)',
-        description: 'Professional English and German language training for career advancement and overseas opportunities.',
-        descriptionBn: 'ক্যারিয়ার উন্নতি এবং বিদেশী সুযোগের জন্য পেশাদার ইংরেজি এবং জার্মান ভাষা প্রশিক্ষণ।',
-        features: ['Conversational Skills', 'Business Language', 'Grammar & Writing', 'Cultural Context'],
-        isFeatured: true,
-      });
-      await storage.createCourse({
-        title: 'Higher Study Guidelines',
-        titleBn: 'উচ্চশিক্ষা গাইডলাইন',
-        category: 'Professional',
-        duration: 'Consultation',
-        fee: 'Contact Us',
-        description: 'Expert guidance for students planning to pursue higher education abroad. Includes university selection, application process, and visa guidance.',
-        descriptionBn: 'বিদেশে উচ্চশিক্ষার জন্য পরিকল্পনাকারী শিক্ষার্থীদের জন্য বিশেষজ্ঞ গাইডেন্স।',
-        features: ['University Selection', 'Application Assistance', 'Visa Guidance', 'Scholarship Info'],
-      });
-
-      console.log('Seeding complete!');
-    }
+    await runSeed(crypto);
   }
 
   return httpServer;
 }
-
-import passport from 'passport';

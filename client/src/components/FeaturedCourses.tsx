@@ -1,246 +1,179 @@
-import { useState, useMemo, useEffect } from 'react';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, GraduationCap, Award, ArrowRight } from 'lucide-react';
+import {
+  Award,
+  Briefcase,
+  Languages,
+  ArrowRight,
+  Layers,
+  Tag,
+  GraduationCap,
+  Loader2,
+} from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'wouter';
 import { useCourses } from '@/hooks/use-courses';
-import { useTranslation } from 'react-i18next';
-import { useLocalizedCourse } from '@/hooks/use-localized-content';
 import type { Course } from '@shared/schema';
 
-type TabType = 'all' | 'government' | 'skillsboost';
+type FilterTab = 'all' | 'nsda' | 'skills' | 'language';
+
+const filterTabs: {
+  key: FilterTab;
+  label: string;
+  shortLabel: string;
+  icon: React.ReactNode;
+}[] = [
+  {
+    key: 'all',
+    label: 'All Courses',
+    shortLabel: 'All',
+    icon: <Layers className="h-4 w-4" />,
+  },
+  {
+    key: 'nsda',
+    label: 'Government (NSDA)',
+    shortLabel: 'NSDA',
+    icon: <Award className="h-4 w-4" />,
+  },
+  {
+    key: 'skills',
+    label: 'Skills Development Programs',
+    shortLabel: 'Skills',
+    icon: <Briefcase className="h-4 w-4" />,
+  },
+  {
+    key: 'language',
+    label: 'Language Training',
+    shortLabel: 'Language',
+    icon: <Languages className="h-4 w-4" />,
+  },
+];
+
+const IMAGE_FALLBACK =
+  'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200';
+
+function normalizeCategory(value: string): FilterTab | 'other' {
+  const v = value.toLowerCase();
+  if (v === 'nsda') return 'nsda';
+  if (v === 'language') return 'language';
+  if (v === 'skills' || v === 'skill development' || v === 'skillsboost')
+    return 'skills';
+  return 'other';
+}
+
+const PREVIEW_LIMIT = 8;
 
 const FeaturedCourses = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('all');
-  const { data: allCourses = [], isLoading, error } = useCourses();
-  const { t, i18n } = useTranslation(['common', 'courses', 'messages']);
-  const isBangla = i18n.language === 'bn';
+  const [activeTab, setActiveTab] = useState<FilterTab>('all');
+  const {
+    data: courses = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isFetching,
+  } = useCourses();
 
-  // Debug: Log all courses when they're loaded
-  useEffect(() => {
-    if (allCourses && allCourses.length > 0) {
-      console.log('=== ALL COURSES DEBUG ===');
-      console.log('Total courses:', allCourses.length);
-      allCourses.forEach((course, index) => {
-        console.log(`Course ${index + 1}:`, {
-          title: course.title,
-          titleBn: course.titleBn,
-          category: course.category,
-          level: course.level,
-        });
-      });
-      console.log('=========================');
-    }
-  }, [allCourses]);
+  const filtered = useMemo<Course[]>(() => {
+    if (activeTab === 'all') return courses;
+    return courses.filter(c => normalizeCategory(c.category) === activeTab);
+  }, [courses, activeTab]);
 
-  // Filter courses based on active tab with FIXED logic for actual database categories
-  const filteredCourses = useMemo(() => {
-    if (!allCourses || allCourses.length === 0) {
-      return [];
-    }
-
-    if (activeTab === 'all') {
-      return allCourses;
-    }
-
-    if (activeTab === 'government') {
-      // Filter courses with "NSDA" in category (matches "NSDA (RPL/RTO)")
-      const filtered = allCourses.filter(course => {
-        const category = course.category?.toUpperCase() || '';
-        return category.includes('NSDA');
-      });
-      console.log('=== GOVERNMENT (NSDA) FILTER ===');
-      console.log('Filtered courses count:', filtered.length);
-      filtered.forEach(course => {
-        console.log('- ', course.title, '(Category:', course.category, ')');
-      });
-      console.log('================================');
-      return filtered;
-    }
-
-    if (activeTab === 'skillsboost') {
-      // SkillsBoost courses: Any course related to skill development, soft skills, career development
-      const filtered = allCourses.filter(course => {
-        const title = course.title?.toLowerCase() || '';
-        const titleBn = course.titleBn || '';
-        const category = course.category?.toLowerCase() || '';
-
-        // Match titles containing "soft"
-        const titleMatch = title.includes('soft');
-        const titleBnMatch = titleBn.includes('সফট');
-
-        // Match categories containing skill/development/career/communication/corporate skill keywords
-        const categoryMatch =
-          category.includes('skill') || // Matches: "Skill Development", "Corporate Skill", "Communication Skill"
-          category.includes('development') || // Matches: "Skill Development", "Career Development"
-          category.includes('career') || // Matches: "Career Development"
-          category.includes('communication') || // Matches: "Communication Skill"
-          category.includes('corporate'); // Matches: "Corporate Skill"
-
-        return titleMatch || titleBnMatch || categoryMatch;
-      });
-
-      console.log('=== SKILLSBOOST FILTER ===');
-      console.log('Filtered courses count:', filtered.length);
-      filtered.forEach(course => {
-        console.log('- ', course.title, '(Category:', course.category, ')');
-      });
-      console.log('==========================');
-      return filtered;
-    }
-
-    return allCourses;
-  }, [allCourses, activeTab]);
-
-  const handleTabChange = (tab: TabType) => {
-    setActiveTab(tab);
-  };
+  const visible = filtered.slice(0, PREVIEW_LIMIT);
+  const hasMore = filtered.length > PREVIEW_LIMIT;
 
   return (
-    <div className="min-h-screen w-full">
-      {/* Improved Tab Filter Section - Sticky */}
-      <section className="backdrop-blur-lg w-full">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-16 max-w-screen-2xl">
-          <div className="flex items-center justify-center py-4 sm:py-5 overflow-x-auto scrollbar-hide">
-            <div className="flex bg-white rounded-lg sm:rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-1 gap-1.5 sm:gap-2">
-              <button
-                className={`relative px-3 sm:px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-md sm:rounded-lg transition-all duration-200 whitespace-nowrap flex items-center border-2 ${
-                  activeTab === 'all'
-                    ? 'bg-primary text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
-                    : 'text-gray-700 bg-white border-transparent hover:border-black'
-                } ${isBangla ? 'font-bangla' : ''}`}
-                onClick={() => handleTabChange('all')}
-              >
-                <GraduationCap className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-                {t('courses:filters.allCourses')} ▼
-              </button>
-
-              <button
-                className={`relative px-3 sm:px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-md sm:rounded-lg transition-all duration-200 whitespace-nowrap flex items-center border-2 ${
-                  activeTab === 'government'
-                    ? 'bg-primary text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
-                    : 'text-gray-700 bg-white border-transparent hover:border-black'
-                } ${isBangla ? 'font-bangla' : ''}`}
-                onClick={() => handleTabChange('government')}
-              >
-                <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-                {t('courses:filters.government')}
-              </button>
-
-              <button
-                className={`relative px-3 sm:px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-md sm:rounded-lg transition-all duration-200 whitespace-nowrap flex items-center border-2 ${
-                  activeTab === 'skillsboost'
-                    ? 'bg-primary text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
-                    : 'text-gray-700 bg-white border-transparent hover:border-black'
-                } ${isBangla ? 'font-bangla' : ''}`}
-                onClick={() => handleTabChange('skillsboost')}
-              >
-                <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-                {t('courses:filters.skillsBoost')}
-              </button>
+    <div className="min-h-screen bg-[rgb(var(--whitebackground))]">
+      <section className="py-14 md:py-2 px-6 lg:px-16">
+        <div className="container mx-auto">
+          <div className="flex items-center justify-center mb-8 md:mb-6">
+            <div className="w-full flex justify-center overflow-x-auto scrollbar-hide py-4 sm:py-5 -mx-1 px-1">
+              <div className="inline-flex bg-white rounded-lg sm:rounded-xl border-2 border-black p-0.5 sm:p-1 gap-1 sm:gap-2 shadow-[3px_3px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                {filterTabs.map(tab => {
+                  const isActive = activeTab === tab.key;
+                  return (
+                    <button
+                      key={tab.key}
+                      onClick={() => setActiveTab(tab.key)}
+                      className={`
+              relative inline-flex items-center gap-1.5 sm:gap-2
+              px-3.5 sm:px-4 py-2 sm:py-2.5
+              text-[11px] sm:text-sm font-semibold
+              rounded-md sm:rounded-lg
+              whitespace-nowrap border-2
+              transition-all duration-200
+              cursor-pointer select-none
+              ${
+                isActive
+                  ? 'bg-primary text-white border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]'
+                  : 'text-gray-600 bg-white border-transparent hover:border-black hover:text-primary'
+              }
+            `}
+                    >
+                      <span className="hidden sm:inline-flex">{tab.icon}</span>
+                      <span className="sm:hidden">{tab.shortLabel}</span>
+                      <span className="hidden sm:inline">{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-      {/* Courses Section */}
-      <section className="py-16 w-full">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-16 max-w-screen-2xl">
-          {/* Loading State */}
-          {isLoading && (
-            <div className="flex flex-col items-center justify-center py-32">
-              <div className="relative">
-                <div className="h-16 w-16 rounded-full border-4 border-gray-200"></div>
-                <div className="absolute top-0 left-0 h-16 w-16 rounded-full border-4 border-[#FF6947] border-t-transparent animate-spin"></div>
-              </div>
-              <p className={`mt-6 text-lg text-gray-600 font-medium ${isBangla ? 'font-bangla' : ''}`}>
-                {t('messages:loading.courses')}
-              </p>
+
+          {isLoading ? (
+            <div className="flex items-center justify-center py-24 text-gray-500">
+              <Loader2 className="w-6 h-6 animate-spin mr-3" />
+              Loading courses…
             </div>
-          )}
-
-          {/* Error State */}
-          {error && (
-            <div className="flex flex-col items-center justify-center py-32">
-              <div className="h-20 w-20 rounded-full bg-red-100 flex items-center justify-center mb-6">
-                <svg
-                  className="h-10 w-10 text-red-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </div>
-              <p className="text-xl text-red-600 font-semibold mb-2">
-                Failed to load courses
+          ) : isError ? (
+            <div className="max-w-md mx-auto text-center py-20">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                We couldn&apos;t load the course list
+              </h3>
+              <p className="text-sm text-gray-500 mb-6">
+                {(error as Error)?.message ||
+                  'The server may still be starting up. Please try again in a moment.'}
               </p>
-              <p className="text-gray-600">
-                Please try again later or contact support.
-              </p>
+              <Button
+                onClick={() => refetch()}
+                disabled={isFetching}
+                className="bg-primary hover:bg-primary/90 text-white"
+              >
+                {isFetching ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Retrying…
+                  </>
+                ) : (
+                  'Retry'
+                )}
+              </Button>
             </div>
-          )}
-
-          {/* Empty State */}
-          {!isLoading && !error && filteredCourses.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-32">
-              <div className="h-20 w-20 rounded-full bg-gray-100 flex items-center justify-center mb-6">
-                <TrendingUp className="h-10 w-10 text-gray-400" />
-              </div>
-              <p className="text-2xl font-bold text-gray-900 mb-2">
-                No courses found
-              </p>
-              <p className="text-gray-600">
-                {activeTab === 'government' &&
-                  'No NSDA government courses available at the moment.'}
-                {activeTab === 'skillsboost' &&
-                  'No SkillsBoost courses available at the moment.'}
-                {activeTab === 'all' &&
-                  'No courses available. Please check back later.'}
-              </p>
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-24 text-gray-500">
+              No courses found in this category yet.
             </div>
-          )}
-
-          {/* Courses Grid */}
-          {!isLoading && !error && filteredCourses.length > 0 && (
-            <div className="space-y-10">
-              {/* Section Header */}
-              {/* <div className="text-center md:text-left space-y-3">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
-                  {activeTab === 'all' && 'All Available Courses'}
-                  {activeTab === 'government' && 'NSDA Approved Courses'}
-                  {activeTab === 'skillsboost' && 'SkillsBoost Programs'}
-                </h2>
-                <p className="text-lg md:text-xl text-gray-600 max-w-3xl">
-                  {activeTab === 'all' &&
-                    `Discover ${filteredCourses.length} professional courses across all categories`}
-                  {activeTab === 'government' &&
-                    `${filteredCourses.length} government-certified skill development programs with job placement support`}
-                  {activeTab === 'skillsboost' &&
-                    `${filteredCourses.length} soft skills training programs for professional excellence and career growth`}
-                </p>
-              </div> */}
-
-              {/* Course Cards Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                {filteredCourses.map(course => (
-                  <CourseCard key={course._id} course={course} />
+          ) : (
+            <>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+                {visible.map((course, index) => (
+                  <CourseCard key={course._id} course={course} index={index} />
                 ))}
               </div>
-            </div>
+              {hasMore && (
+                <div className="flex justify-center my-16">
+                  <Link to="/courses">
+                    <Button
+                      size="lg"
+                      className="bg-primary hover:bg-primary/90 text-white font-semibold px-8 py-3 rounded-xl shadow-[3px_3px_0px_rgba(0,0,0,1)] border-2 border-black transition-all duration-200 hover:-translate-y-0.5"
+                    >
+                      View All Courses
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
@@ -248,156 +181,128 @@ const FeaturedCourses = () => {
   );
 };
 
-// Professional Tab Button Component with Count Badge
-const TabButton = ({
-  active,
-  onClick,
-  children,
-  icon,
-  count,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-  icon?: React.ReactNode;
-  count?: number;
-}) => (
-  <button
-    onClick={onClick}
-    className={`
-      group relative flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm
-      transition-all duration-300 whitespace-nowrap
-      ${
-        active
-          ? 'bg-gradient-to-r from-[#FF6947] to-[#FF8A5B] text-white shadow-md'
-          : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-      }
-    `}
-  >
-    {icon && (
-      <span
-        className={`transition-transform duration-300 ${
-          active ? 'scale-110' : 'group-hover:scale-110'
-        }`}
-      >
-        {icon}
-      </span>
-    )}
-    <span className="font-semibold">{children}</span>
-    {count !== undefined && count > 0 && (
-      <span
-        className={`
-        ml-1 px-2 py-0.5 rounded-full text-xs font-bold
-        ${active ? 'bg-white/25 text-white' : 'bg-gray-200 text-gray-700'}
-      `}
-      >
-        {count}
-      </span>
-    )}
-  </button>
-);
+interface CourseCardProps {
+  course: Course;
+  index: number;
+}
 
-// Professional Industry-Standard Course Card Component
-const CourseCard = ({ course }: { course: Course }) => {
-  // Determine badge styles based on category
-  const getBadgeStyles = (category: string) => {
-    const cat = category?.toUpperCase() || '';
-    if (cat.includes('NSDA'))
-      return 'bg-emerald-50 text-emerald-700 border-emerald-200';
-    if (cat.includes('SKILL'))
-      return 'bg-purple-50 text-purple-700 border-purple-200';
-    if (cat.includes('CORPORATE'))
-      return 'bg-amber-50 text-amber-700 border-amber-200';
-    if (cat.includes('COMMUNICATION'))
-      return 'bg-rose-50 text-rose-700 border-rose-200';
-    if (cat.includes('CAREER'))
-      return 'bg-blue-50 text-blue-700 border-blue-200';
-    if (cat.includes('JOB')) return 'bg-cyan-50 text-cyan-700 border-cyan-200';
-    return 'bg-gray-50 text-gray-700 border-gray-200';
-  };
+const CourseCard = ({ course, index }: CourseCardProps) => {
+  const discounted = course.discountedPrice ?? 0;
+  const original = course.originalPrice ?? 0;
+  const isFree = discounted === 0 && original === 0;
+  const hasDiscount = !isFree && original > discounted && discounted > 0;
+  const discount = hasDiscount
+    ? Math.round(((original - discounted) / original) * 100)
+    : 0;
+  const categoryKind = normalizeCategory(course.category);
+  const image = course.imageUrl || IMAGE_FALLBACK;
 
   return (
-    <Card className="group h-full flex flex-col bg-white transition-all duration-300 overflow-hidden">
-      {/* Card Header */}
-      <CardHeader className="p-5 space-y-3 border-b-2 border-black">
-        {/* Category Badge and Price Row */}
-        <div className="flex items-center justify-between gap-3">
-          <Badge
-            className={`${getBadgeStyles(
-              course.category
-            )} border text-xs font-semibold px-2.5 py-1`}
-          >
-            {course.category}
-            {course.level && ` • ${course.level}`}
-          </Badge>
-          {course.fee && (
-            <span className="text-lg font-bold text-[#FF6947]">
-              {course.fee}
-            </span>
-          )}
-        </div>
+    <Link
+      to={`/courses/${course.slug}`}
+      className="group block"
+      style={{ animationDelay: `${index * 80}ms` }}
+    >
+      <div
+        className="
+          relative h-full flex flex-col bg-white
+          rounded-2xl overflow-hidden
+         border border-slate-400
+          shadow-[0_2px_20px_rgba(0,0,0,0.06)]
+          hover:border-orange-400
+          hover:shadow-[0_8px_40px_rgba(0,0,0,0.12)]
+          hover:-translate-y-1
+          transition-all duration-300 ease-out
+        "
+      >
+        <div className="relative h-48 overflow-hidden">
+          <img
+            src={image}
+            alt={course.title}
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
 
-        {/* Course Title */}
-        <div className="space-y-1">
-          <CardTitle className="text-lg font-bold text-gray-900 line-clamp-2 leading-tight">
-            {course.title}
-          </CardTitle>
-          {course.titleBn && (
-            <CardDescription className="font-bangla text-sm text-gray-600 line-clamp-1">
-              {course.titleBn}
-            </CardDescription>
-          )}
-        </div>
-      </CardHeader>
-
-      {/* Card Content */}
-      <CardContent className="flex-1 p-5 space-y-4">
-        {/* Description */}
-        {course.description && (
-          <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed">
-            {course.description}
-          </p>
-        )}
-
-        {/* Features List - Compact */}
-        {course.features && course.features.length > 0 && (
-          <div className="space-y-2">
-            {course.features.slice(0, 3).map((feature, idx) => (
-              <div key={idx} className="flex items-start gap-2 text-sm">
-                <svg
-                  className="h-4 w-4 text-[#FF6947] flex-shrink-0 mt-0.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span className="text-gray-700 leading-snug">{feature}</span>
-              </div>
-            ))}
+          <div className="absolute top-0 left-0">
+            {isFree ? (
+              <span className="flex items-center gap-1 pl-3 pr-4 py-1.5 bg-green-500 text-white text-[10px] font-black uppercase tracking-[0.1em] rounded-br-2xl shadow-[0_2px_10px_rgba(22,163,74,0.45)]">
+                <Tag className="h-2.5 w-2.5" />
+                Free
+              </span>
+            ) : hasDiscount ? (
+              <span className="flex items-center gap-1 pl-3 pr-4 py-1.5 bg-orange-500 text-white text-[10px] font-black uppercase tracking-[0.1em] rounded-br-2xl shadow-[0_2px_10px_rgba(249,115,22,0.45)]">
+                <Tag className="h-2.5 w-2.5" />
+                {discount}% OFF
+              </span>
+            ) : null}
           </div>
-        )}
-      </CardContent>
 
-      {/* Card Footer */}
-      <CardFooter className="p-5 pt-0">
-        <Button
-          asChild
-          className="w-full font-semibold py-2.5 text-sm group/btn"
-        >
-          <Link
-            to={`/courses/${course._id}`}
-            className="flex items-center justify-center gap-2"
-          >
-            <span>View Details</span>
-            <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-          </Link>
-        </Button>
-      </CardFooter>
-    </Card>
+          <div className="absolute top-0 right-0">
+            <span className="flex items-center gap-1.5 pr-3 pl-4 py-1.5 text-[10px] font-black uppercase tracking-[0.1em] bg-black/50 backdrop-blur-sm text-white rounded-bl-2xl border-b border-l border-white/10">
+              {categoryKind === 'nsda' ? (
+                <Award className="h-3 w-3 text-amber-300" />
+              ) : categoryKind === 'language' ? (
+                <Languages className="h-3 w-3 text-cyan-300" />
+              ) : (
+                <Briefcase className="h-3 w-3 text-sky-300" />
+              )}
+              {categoryKind === 'nsda'
+                ? 'NSDA'
+                : categoryKind === 'language'
+                  ? 'Language'
+                  : 'Skills'}
+            </span>
+          </div>
+
+          {course.programTags?.length ? (
+            <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5 z-10">
+              {course.programTags.map(tag => (
+                <span
+                  key={tag}
+                  className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.08em] bg-white/90 text-slate-900 border border-white/70 backdrop-blur-sm shadow-sm"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          ) : null}
+        </div>
+
+        <div className="flex flex-col flex-1 px-4 pt-3.5 pb-4">
+          <h3 className="text-[14.5px] font-bold text-gray-900 line-clamp-2 leading-snug group-hover:text-primary transition-colors duration-200 flex-1">
+            {course.title}
+          </h3>
+
+          <div className="flex items-center justify-between gap-3 mt-4 pt-3.5 border-t-2 border-dashed border-gray-100">
+            <div>
+              {isFree ? (
+                <span className="text-xl font-black text-green-500 leading-none">
+                  Free
+                </span>
+              ) : (
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-xl font-black text-gray-900 leading-none">
+                    {`৳${discounted.toLocaleString()}`}
+                  </span>
+                  {hasDiscount && (
+                    <span className="text-xs text-gray-400 line-through">
+                      {`৳${original.toLocaleString()}`}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <Button
+              size="sm"
+              className="transition-all duration-300 bg-orange-500 hover:bg-orange-600 flex-shrink-0"
+            >
+              View Details
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 };
 

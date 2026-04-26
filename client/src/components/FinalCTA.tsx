@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'wouter';
 import { Button } from './ui/button';
 import { useTranslation } from 'react-i18next';
 
@@ -25,12 +26,14 @@ export default function FinalCTA() {
                 .
               </p>
 
-              <Button
-                size="lg"
-                className={`bg-primary border-2 border-black text-white px-10 h-14 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all rounded-full ${isBangla ? 'font-bangla' : ''}`}
-              >
-                {t('buttons.applyNow')}
-              </Button>
+              <Link href="/register">
+                <Button
+                  size="lg"
+                  className={`bg-primary border-2 border-black text-white px-10 h-14 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all rounded-full ${isBangla ? 'font-bangla' : ''}`}
+                >
+                  {t('buttons.applyNow')}
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

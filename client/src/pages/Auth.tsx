@@ -16,9 +16,17 @@ export default function AuthPage() {
   const [, setLocation] = useLocation();
 
   useEffect(() => {
-    if (user) {
-      setLocation(user.role === "admin" ? "/admin" : "/dashboard");
+    if (!user) return;
+    const next =
+      typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search).get('next')
+        : null;
+    // Only honor safe internal redirects
+    if (next && next.startsWith('/') && !next.startsWith('//')) {
+      setLocation(next);
+      return;
     }
+    setLocation(user.role === "admin" ? "/admin" : "/dashboard");
   }, [user, setLocation]);
 
   const loginForm = useForm({

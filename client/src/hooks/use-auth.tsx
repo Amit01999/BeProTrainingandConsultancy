@@ -22,12 +22,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { data: user, error, isLoading } = useQuery({
     queryKey: [api.auth.me.path],
     queryFn: async () => {
-      const res = await fetch(api.auth.me.path);
+      const res = await fetch(api.auth.me.path, { credentials: 'include' });
       if (res.status === 401) return null;
       if (!res.ok) throw new Error("Failed to fetch user");
       return api.auth.me.responses[200].parse(await res.json());
     },
     retry: false,
+    staleTime: Infinity,
   });
 
   const loginMutation = useLoginMutation();
@@ -66,6 +67,7 @@ function useLoginMutation() {
       const res = await fetch(api.auth.login.path, {
         method: api.auth.login.method,
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify(credentials),
       });
       
@@ -101,6 +103,7 @@ function useRegisterMutation() {
       const res = await fetch(api.auth.register.path, {
         method: api.auth.register.method,
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify(validated),
       });
 
@@ -132,7 +135,7 @@ function useLogoutMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async () => {
-      const res = await fetch(api.auth.logout.path, { method: api.auth.logout.method });
+      const res = await fetch(api.auth.logout.path, { method: api.auth.logout.method, credentials: 'include' });
       if (!res.ok) throw new Error("Logout failed");
     },
     onSuccess: () => {

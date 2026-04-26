@@ -1,19 +1,8 @@
+import { useState, useEffect } from 'react';
+import { useParams, useLocation } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
-import {
-  useCourses,
-  useCreateCourse,
-  useDeleteCourse,
-  useUpdateCourse,
-} from '@/hooks/use-courses';
-import {
-  useApplications,
-  useUpdateApplicationStatus,
-} from '@/hooks/use-applications';
-import { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useCourses, useDeleteCourse } from '@/hooks/use-courses';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
   DialogContent,
@@ -21,6 +10,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import {
   Table,
   TableBody,
@@ -31,353 +30,251 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { insertCourseSchema, type InsertCourse } from '@shared/schema';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Plus, Trash2, Edit, CheckCircle, XCircle, Clock } from 'lucide-react';
-import { z } from 'zod';
+  Plus,
+  Trash2,
+  Pencil,
+  Image as ImageIcon,
+  Loader2,
+} from 'lucide-react';
+import type { Course } from '@shared/schema';
+import { CourseForm } from '@/components/admin/CourseForm';
+import { EnrollmentsManager } from '@/components/admin/EnrollmentsManager';
+import { AdminLayout, type AdminSection } from '@/components/admin/AdminLayout';
+import { AdminDashboard } from '@/components/admin/AdminDashboard';
+import { ApplicationsManager } from '@/components/admin/ApplicationsManager';
 
-export default function AdminDashboard() {
-  const { user } = useAuth();
+const VALID_SECTIONS: AdminSection[] = [
+  'dashboard',
+  'courses',
+  'enrollments',
+  'applications',
+];
 
-  if (!user || user.role !== 'admin') {
-    return <div className="p-10 text-center">Access Denied</div>;
+export default function AdminPage() {
+  const { user, isLoading } = useAuth();
+  const { section } = useParams<{ section: string }>();
+  const [, navigate] = useLocation();
+
+  const activeSection: AdminSection = VALID_SECTIONS.includes(
+    section as AdminSection,
+  )
+    ? (section as AdminSection)
+    : 'courses';
+
+  // When the user is known-to-be-null (session expired or logged out),
+  // redirect to login. useEffect fires after React commits the render,
+  // so user is guaranteed to be null in the cache by the time Auth page mounts —
+  // preventing the race where Auth.tsx sees a stale admin user and bounces back.
+  useEffect(() => {
+    if (!isLoading && !user) {
+      navigate('/login');
+    }
+  }, [user, isLoading, navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    // Redirecting via useEffect above; render nothing to avoid flash
+    return null;
+  }
+
+  if (user.role !== 'admin') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <p className="text-slate-600 font-medium">Access Denied</p>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-display font-bold text-slate-900 mb-8">
-          Admin Dashboard
-        </h1>
+    <AdminLayout activeSection={activeSection}>
+      {activeSection === 'dashboard' && <AdminDashboard />}
 
-        <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList className="bg-white p-1 rounded-xl border">
-            <TabsTrigger value="courses" className="px-6">
-              Manage Courses
-            </TabsTrigger>
-            <TabsTrigger value="applications" className="px-6">
-              Manage Applications
-            </TabsTrigger>
-          </TabsList>
+      {activeSection === 'courses' && (
+        <div className="p-6 lg:p-8">
+          <CoursesManager />
+        </div>
+      )}
 
-          <TabsContent value="courses">
-            <CoursesManager />
-          </TabsContent>
+      {activeSection === 'enrollments' && (
+        <div className="p-6 lg:p-8">
+          <EnrollmentsManager />
+        </div>
+      )}
 
-          <TabsContent value="applications">
-            <ApplicationsManager />
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>
+      {activeSection === 'applications' && (
+        <div className="p-6 lg:p-8">
+          <ApplicationsManager />
+        </div>
+      )}
+    </AdminLayout>
   );
 }
 
+// ─────────────────────────────────────────────
+// CoursesManager — unchanged business logic
+// ─────────────────────────────────────────────
+
 function CoursesManager() {
-  const { data: courses } = useCourses();
+  const { data: courses, isLoading } = useCourses();
   const deleteCourse = useDeleteCourse();
-  const [open, setOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [editCourse, setEditCourse] = useState<Course | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<Course | null>(null);
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm border">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold">All Courses</h2>
-        <Dialog open={open} onOpenChange={setOpen}>
+        <h2 className="text-xl font-bold">
+          All Courses ({courses?.length ?? 0})
+        </h2>
+        <Dialog open={createOpen} onOpenChange={setCreateOpen}>
           <DialogTrigger asChild>
             <Button className="bg-primary hover:bg-primary/90">
               <Plus className="mr-2 h-4 w-4" /> Add Course
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-3xl">
             <DialogHeader>
               <DialogTitle>Create New Course</DialogTitle>
             </DialogHeader>
-            <CourseForm onSuccess={() => setOpen(false)} />
+            <CourseForm onSuccess={() => setCreateOpen(false)} />
           </DialogContent>
         </Dialog>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Fee</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {courses?.map(course => (
-            <TableRow key={course.id}>
-              <TableCell className="font-medium">{course.title}</TableCell>
-              <TableCell>
-                <Badge variant="outline">{course.category}</Badge>
-              </TableCell>
-              <TableCell>{course.fee}</TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                    onClick={() => {
-                      if (confirm('Are you sure?'))
-                        deleteCourse.mutate(course.id!);
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableCell>
+      {isLoading ? (
+        <div className="text-center py-12 text-slate-500">Loading…</div>
+      ) : (courses?.length ?? 0) === 0 ? (
+        <div className="text-center py-12 text-slate-500">
+          No courses yet. Click "Add Course" to create the first one.
+        </div>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-16">Image</TableHead>
+              <TableHead>Title</TableHead>
+              <TableHead>Slug</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Price</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {courses?.map(course => (
+              <TableRow key={course._id}>
+                <TableCell>
+                  {course.imageUrl ? (
+                    <img
+                      src={course.imageUrl}
+                      alt=""
+                      className="w-12 h-12 rounded object-cover border"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded bg-slate-100 border flex items-center justify-center text-slate-400">
+                      <ImageIcon className="w-4 h-4" />
+                    </div>
+                  )}
+                </TableCell>
+                <TableCell className="font-medium">
+                  <div>{course.title}</div>
+                  {course.isFeatured && (
+                    <Badge className="mt-1 bg-amber-100 text-amber-700 border-0 text-[10px]">
+                      Featured
+                    </Badge>
+                  )}
+                </TableCell>
+                <TableCell className="text-xs text-slate-500 font-mono">
+                  {course.slug}
+                </TableCell>
+                <TableCell>
+                  <Badge variant="outline">{course.category}</Badge>
+                </TableCell>
+                <TableCell>
+                  {course.discountedPrice
+                    ? `৳${course.discountedPrice.toLocaleString()}`
+                    : course.fee || 'Free'}
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex gap-2 justify-end">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-indigo-600 hover:bg-indigo-50"
+                      onClick={() => setEditCourse(course)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      onClick={() => setPendingDelete(course)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+
+      <Dialog
+        open={!!editCourse}
+        onOpenChange={open => !open && setEditCourse(null)}
+      >
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Edit Course</DialogTitle>
+          </DialogHeader>
+          {editCourse && (
+            <CourseForm
+              course={editCourse}
+              onSuccess={() => setEditCourse(null)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog
+        open={!!pendingDelete}
+        onOpenChange={open => !open && setPendingDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete course?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete{' '}
+              <span className="font-semibold">{pendingDelete?.title}</span> and
+              its associated image. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700"
+              onClick={async () => {
+                if (pendingDelete?._id) {
+                  await deleteCourse.mutateAsync(pendingDelete._id);
+                }
+                setPendingDelete(null);
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
 
-function CourseForm({ onSuccess }: { onSuccess: () => void }) {
-  const createCourse = useCreateCourse();
-  const form = useForm<InsertCourse>({
-    resolver: zodResolver(insertCourseSchema),
-    defaultValues: {
-      title: '',
-      category: 'Professional',
-      description: '',
-      duration: '',
-      fee: '',
-      level: '',
-      isFeatured: false,
-    },
-  });
-
-  const onSubmit = (data: InsertCourse) => {
-    createCourse.mutate(data, { onSuccess });
-  };
-
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Course Title</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {[
-                      'NSDA',
-                      'Professional',
-                      'Corporate',
-                      'Language',
-                      'SkillsBoost',
-                    ].map(c => (
-                      <SelectItem key={c} value={c}>
-                        {c}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="level"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Level</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="L-2, Beginner..."
-                    {...field}
-                    value={field.value || ''}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="duration"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Duration</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="3 Months"
-                    {...field}
-                    value={field.value || ''}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="fee"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Fee</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="5000 BDT"
-                    {...field}
-                    value={field.value || ''}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea {...field} value={field.value || ''} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={createCourse.isPending}
-        >
-          {createCourse.isPending ? 'Creating...' : 'Create Course'}
-        </Button>
-      </form>
-    </Form>
-  );
-}
-
-function ApplicationsManager() {
-  const { data: applications } = useApplications();
-  const updateStatus = useUpdateApplicationStatus();
-
-  return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border">
-      <h2 className="text-xl font-bold mb-6">Student Applications</h2>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Student</TableHead>
-            <TableHead>Course</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {applications?.map(app => (
-            <TableRow key={app.id}>
-              <TableCell>
-                <div>
-                  <div className="font-medium">{app.user.fullName}</div>
-                  <div className="text-xs text-slate-500">{app.user.email}</div>
-                  <div className="text-xs text-slate-500">{app.user.phone}</div>
-                </div>
-              </TableCell>
-              <TableCell>{app.course.title}</TableCell>
-              <TableCell>
-                {new Date(app.appliedAt || '').toLocaleDateString()}
-              </TableCell>
-              <TableCell>
-                {app.status === 'pending' && (
-                  <Badge className="bg-yellow-100 text-yellow-800 border-none">
-                    Pending
-                  </Badge>
-                )}
-                {app.status === 'approved' && (
-                  <Badge className="bg-green-100 text-green-800 border-none">
-                    Approved
-                  </Badge>
-                )}
-                {app.status === 'rejected' && (
-                  <Badge className="bg-red-100 text-red-800 border-none">
-                    Rejected
-                  </Badge>
-                )}
-              </TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-green-200 hover:bg-green-50 text-green-700"
-                    onClick={() =>
-                      updateStatus.mutate({ id: app.id!, status: 'approved' })
-                    }
-                    disabled={app.status === 'approved'}
-                  >
-                    <CheckCircle className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-red-200 hover:bg-red-50 text-red-700"
-                    onClick={() =>
-                      updateStatus.mutate({ id: app.id!, status: 'rejected' })
-                    }
-                    disabled={app.status === 'rejected'}
-                  >
-                    <XCircle className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  );
-}

@@ -34,18 +34,38 @@ declare global {
   }
 }
 
-export function setupAuth(app: Express) {
+export async function setupAuth(app: Express) {
+  const dbName = process.env.MONGO_DB_NAME || 'BeProTrainingandConsultancy';
+
+  const mongoUrl = process.env.MONGO_URL;
+  if (!mongoUrl) throw new Error('MONGO_URL is required for the session store');
+
+  const store = MongoStore.create({
+    mongoUrl,
+    dbName,
+    collectionName: 'sessions',
+    ttl: 30 * 24 * 60 * 60,       // 30 days — matches cookie maxAge
+    touchAfter: 24 * 60 * 60,     // re-save session at most once per day
+    autoRemove: 'native',
+  });
+
+  store.on('error', err => {
+    console.error('[session-store] error:', err?.message || err);
+  });
+  store.on('connected', () => {
+    console.log('[session-store] connected to MongoDB');
+  });
+
   const sessionSettings: session.SessionOptions = {
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URL,
-      collectionName: 'sessions',
-    }) as any,
+    store,
     secret: process.env.SESSION_SECRET || 'super secret session key',
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
       secure: app.get('env') === 'production',
+      httpOnly: true,
+      sameSite: 'lax',
     },
   };
 
@@ -72,14 +92,20 @@ export function setupAuth(app: Express) {
   );
 
   passport.serializeUser((user: any, done) => done(null, user.id ?? user._id));
+
   passport.deserializeUser(async (id: string, done) => {
+    console.log('[auth] deserializeUser called with id:', id);
     try {
       const user = await storage.getUser(id);
-      done(null, user);
+      console.log('[auth] deserializeUser found user:', !!user, user?.username);
+      // Return false (not an error) for missing/invalid users so a stale
+      // session cookie logs the user out gracefully instead of surfacing 500.
+      done(null, user ?? false);
     } catch (err) {
-      done(err);
+      console.warn('[auth] deserializeUser soft-failure:', (err as Error)?.message);
+      done(null, false);
     }
   });
 
-  return crypto; // Export crypto for seeding
+  return crypto;
 }

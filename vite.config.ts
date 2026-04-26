@@ -40,6 +40,11 @@ export default defineConfig({
       "/api": {
         target: "http://localhost:5000",
         changeOrigin: true,
+        secure: false,
+        // Rewrite cookie domain so the browser stores it for localhost (5173)
+        // not the backend host (5000). Without this, the Set-Cookie the proxy
+        // passes back might not be accepted by the browser on the right origin.
+        cookieDomainRewrite: { "*": "" },
       },
     },
   },
